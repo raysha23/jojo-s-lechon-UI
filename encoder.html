@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lechon Order System - Encoder</title>
+    <link rel="stylesheet" href="css/encoder.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <h1>Lechon Order System</h1>
+        <p>Customer Order Recording &amp; Management</p>
+      </div>
+      <div class="navbar-right">
+        Logged in as <span class="user-name" id="userName">Encoder User</span>
+        <span class="badge">Encoder</span>
+        <button class="logout-btn" id="logoutBtn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3-3h-9m9 0l-3-3m3 3l-3 3"
+            />
+          </svg>
+          Logout
+        </button>
+      </div>
+    </nav>
+
+    <div class="main">
+      <div class="card">
+        <h2>Record Customer Order</h2>
+        <p class="desc">Enter customer booking details for lechon products</p>
+
+        <form id="orderForm">
+          <label class="form-label">Customer Name</label>
+          <input
+            class="form-input"
+            type="text"
+            placeholder="Enter customer name"
+            required
+          />
+
+          <label class="form-label">Package Amount (₱)</label>
+          <input
+            class="form-input"
+            type="number"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+            required
+          />
+
+          <label class="form-label">Delivery Location</label>
+          <input
+            class="form-input"
+            type="text"
+            placeholder="Enter delivery address"
+            required
+          />
+
+          <div class="row">
+            <div>
+              <label class="form-label">Delivery Date</label>
+              <input class="form-input" type="date" required />
+            </div>
+            <div>
+              <label class="form-label">Delivery Time</label>
+              <input class="form-input" type="time" required />
+            </div>
+          </div>
+
+          <div class="section-header">
+            <label class="form-label" style="margin-bottom: 0"
+              >Contact Numbers</label
+            >
+            <button type="button" class="add-btn" id="addContact">+ Add</button>
+          </div>
+          <div class="dynamic-list" id="contactList">
+            <div class="item">
+              <input
+                class="form-input"
+                style="margin-bottom: 0"
+                type="tel"
+                placeholder="Enter contact number"
+              />
+            </div>
+          </div>
+
+          <div class="section-header">
+            <label class="form-label" style="margin-bottom: 0"
+              >Dishes (minimum 2 items)</label
+            >
+            <button type="button" class="add-btn" id="addDish">+ Add</button>
+          </div>
+          <div class="dynamic-list" id="dishList">
+            <div class="item">
+              <input
+                class="form-input"
+                style="margin-bottom: 0"
+                type="text"
+                placeholder="Dish 1"
+                required
+              />
+            </div>
+            <div class="item">
+              <input
+                class="form-input"
+                style="margin-bottom: 0"
+                type="text"
+                placeholder="Dish 2"
+                required
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">Record Order</button>
+        </form>
+
+        <div class="success-msg" id="successMsg">
+          ✓ Order recorded successfully!
+        </div>
+      </div>
+    </div>
+    <script src="js/encoder.js"></script>
+  </body>
+</html>
