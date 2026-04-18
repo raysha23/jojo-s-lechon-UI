@@ -4,20 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lechon Order System - Encoder</title>
-    <link rel="stylesheet" href="css/encoder.css" />
+    <link rel="stylesheet" href="css/output.css" />
   </head>
-  <body>
-    <nav class="navbar">
+  <body class="bg-gray-50 text-gray-800 font-sans min-h-screen text-base">
+    <nav
+      class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center sticky top-0 z-50"
+    >
       <div class="navbar-brand">
-        <h1>Lechon Order System</h1>
-        <p>Customer Order Recording &amp; Management</p>
+        <h1 class="text-3xl font-bold text-[#1a1a2e] leading-tight">
+          Lechon Order System
+        </h1>
+        <p class="text-sm text-[#c0792a] italic uppercase tracking-wider">
+          Customer Order Management
+        </p>
       </div>
-      <div class="navbar-right">
-        Logged in as <span class="user-name" id="userName">Encoder User</span>
-        <span class="badge">Encoder</span>
-        <button class="logout-btn" id="logoutBtn">
+
+      <div class="flex items-center gap-6 text-sm">
+        <div class="hidden text-base md:block text-gray-600">
+          Logged in as
+          <span class="font-semibold text-base text-[#c0792a]" id="userName"
+            >Encoder User</span
+          >
+        </div>
+        <span
+          class="bg-[#1a1a2e] text-white px-3 text-base py-1 rounded-md text-xs font-bold shadow-sm"
+          >ENCODER</span
+        >
+        <button
+          class="flex items-center gap-2 text-gray-500 text-base hover:text-red-600 transition-colors font-medium"
+          id="logoutBtn"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -34,101 +53,304 @@
       </div>
     </nav>
 
-    <div class="main">
-      <div class="card">
-        <h2>Record Customer Order</h2>
-        <p class="desc">Enter customer booking details for lechon products</p>
-
-        <form id="orderForm">
-          <label class="form-label">Customer Name</label>
-          <input
-            class="form-input"
-            type="text"
-            placeholder="Enter customer name"
-            required
-          />
-
-          <label class="form-label">Package Amount (₱)</label>
-          <input
-            class="form-input"
-            type="number"
-            placeholder="0.00"
-            min="0"
-            step="0.01"
-            required
-          />
-
-          <label class="form-label">Delivery Location</label>
-          <input
-            class="form-input"
-            type="text"
-            placeholder="Enter delivery address"
-            required
-          />
-
-          <div class="row">
-            <div>
-              <label class="form-label">Delivery Date</label>
-              <input class="form-input" type="date" required />
-            </div>
-            <div>
-              <label class="form-label">Delivery Time</label>
-              <input class="form-input" type="time" required />
-            </div>
-          </div>
-
-          <div class="section-header">
-            <label class="form-label" style="margin-bottom: 0"
-              >Contact Numbers</label
-            >
-            <button type="button" class="add-btn" id="addContact">+ Add</button>
-          </div>
-          <div class="dynamic-list" id="contactList">
-            <div class="item">
-              <input
-                class="form-input"
-                style="margin-bottom: 0"
-                type="tel"
-                placeholder="Enter contact number"
-              />
-            </div>
-          </div>
-
-          <div class="section-header">
-            <label class="form-label" style="margin-bottom: 0"
-              >Dishes (minimum 2 items)</label
-            >
-            <button type="button" class="add-btn" id="addDish">+ Add</button>
-          </div>
-          <div class="dynamic-list" id="dishList">
-            <div class="item">
-              <input
-                class="form-input"
-                style="margin-bottom: 0"
-                type="text"
-                placeholder="Dish 1"
-                required
-              />
-            </div>
-            <div class="item">
-              <input
-                class="form-input"
-                style="margin-bottom: 0"
-                type="text"
-                placeholder="Dish 2"
-                required
-              />
-            </div>
-          </div>
-
-          <button type="submit" class="submit-btn">Record Order</button>
-        </form>
-
-        <div class="success-msg" id="successMsg">
-          ✓ Order recorded successfully!
+    <main class="max-w-7xl mx-auto px-6 py-10">
+      <div
+        class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
+      >
+        <div class="bg-white p-8 text-center border-b border-gray-300 mb-6">
+          <h2 class="text-3xl font-black text-[#1a1a2e] tracking-tight">
+            Record Customer Order
+          </h2>
+          <p class="text-sm text-[#c0792a] mt-1">
+            Fill out all required fields to register a new booking.
+          </p>
         </div>
+
+        <form id="orderForm" class="p-8 pt-4">
+          <div class="flex flex-col gap-12">
+            <div class="flex-1 space-y-6">
+              <div class="border-b border-gray-300 pb-2">
+                <h3
+                  class="text-lg font-bold text-black uppercase tracking-widest"
+                >
+                  General Information
+                </h3>
+              </div>
+
+              <div>
+                <label class="block text-base font-bold text-[#8b4513] mb-2"
+                  >Customer Name</label
+                >
+                <input
+                  type="text"
+                  id="customerName"
+                  required
+                  placeholder="Enter customer name"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#c0792a] focus:border-transparent outline-none transition-all"
+                />
+              </div>
+
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <label class="text-base font-bold text-[#8b4513]"
+                    >Contact Numbers</label
+                  >
+                  <button
+                    type="button"
+                    id="addContact"
+                    class="text-xs font-bold text-[#c0792a] hover:underline"
+                  >
+                    + ADD NEW
+                  </button>
+                </div>
+                <div id="contactList" class="space-y-2">
+                  <input
+                    type="tel"
+                    placeholder="Enter contact number"
+                    class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-base font-bold text-[#8b4513] mb-2"
+                  >Facebook Link (optional)</label
+                >
+                <input
+                  type="text"
+                  placeholder="Enter FB profile/page link"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                />
+              </div>
+
+              <div>
+                <label class="block text-base font-bold text-[#8b4513] mb-2"
+                  >Delivery Location</label
+                >
+                <textarea
+                  placeholder="Enter full delivery address"
+                  required
+                  rows="2"
+                  class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none resize-none"
+                ></textarea>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-base font-bold text-[#8b4513] mb-2"
+                    >Delivery Date</label
+                  >
+                  <input
+                    type="date"
+                    required
+                    class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none text-base"
+                  />
+                </div>
+                <div>
+                  <label class="block text-base font-bold text-[#8b4513] mb-2"
+                    >Delivery Time</label
+                  >
+                  <input
+                    type="time"
+                    required
+                    class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none text-base"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="flex-1 space-y-6 bg-gray-50 p-6 rounded-2xl border border-gray-100"
+            >
+              <div class="border-b border-gray-300 pb-2">
+                <h3
+                  class="text-lg font-bold text-black uppercase tracking-widest"
+                >
+                  Order Details
+                </h3>
+              </div>
+
+              <div>
+                <label class="block text-base font-bold text-[#8b4513] mb-4">
+                  Order Type
+                </label>
+
+                <select
+                  name="orderType"
+                  id="orderType"
+                  class="w-full p-3 bg-white rounded-xl border border-gray-200 text-[#1a1a2e] font-medium outline-none focus:border-[#c0792a]"
+                >
+                  <option value="lechon_package">Lechon Package</option>
+                  <option value="belly_package">Belly Package</option>
+                  <option value="lechon">Lechon Only</option>
+                  <option value="belly">Belly Only</option>
+                  <option value="dishes" selected>Dishes Only</option>
+                </select>
+              </div>
+
+              <div id="packageSection" class="space-y-4">
+                <div>
+                  <label class="block text-base font-bold text-[#8b4513] mb-2"
+                    >Select Package</label
+                  >
+                  <select
+                    id="packageSelect"
+                    class="w-full p-3 bg-white border border-gray-200 rounded-xl outline-none text-base"
+                  >
+                    <option value="">— Select a package —</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="dishSection" class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <label class="text-base font-bold text-[#8b4513]"
+                    >Dishes
+                    <span class="font-normal text-gray-400 italic"
+                      >(₱700 each if Additional)</span
+                    ></label
+                  >
+                  <button
+                    type="button"
+                    id="addDish"
+                    class="text-xs font-bold text-[#c0792a] hover:underline"
+                  >
+                    + ADD DISH
+                  </button>
+                </div>
+                <div id="dishList" class="space-y-2">
+                  <div class="flex gap-2">
+                    <select
+                      class="flex-1 p-3 bg-white border border-gray-200 rounded-xl outline-none dish-select"
+                    >
+                      <option value="">— Select Dish —</option>
+                    </select>
+                    <button
+                      type="button"
+                      class="text-red-400 hover:text-red-600 px-2"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="freebieSection" class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <label class="text-base font-bold text-[#8b4513]"
+                    >Freebies</label
+                  >
+                </div>
+                <div id="freebieList" class="space-y-2"></div>
+              </div>
+
+              <div class="bg-[#1a1a2e] p-6 rounded-2xl shadow-inner mt-8">
+                <!-- TITLE -->
+                <label
+                  class="block text-base font-bold text-white uppercase mb-4"
+                >
+                  Order Summary
+                </label>
+
+                <!-- PACKAGE -->
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-base text-white">Package/Product</span>
+
+                  <div class="flex items-center gap-1">
+                    <span class="text-white">₱</span>
+                    <span
+                      id="packageAmount"
+                      class="text-white text-base font-semibold text-right w-24"
+                    >
+                      0.00
+                    </span>
+                  </div>
+                </div>
+
+                <!-- DISHES -->
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-base text-white">Dishes</span>
+
+                  <div class="flex items-center gap-1">
+                    <span class="text-white">₱</span>
+                    <span
+                      id="dishesTotal"
+                      class="text-white text-base font-semibold text-right w-24"
+                    >
+                      0.00
+                    </span>
+                  </div>
+                </div>
+                <!-- DISCOUNT -->
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-base text-white" style="font-style: italic"
+                    >Discount</span
+                  >
+
+                  <div class="flex items-center gap-1">
+                    <span class="text-white">₱</span>
+                    <span
+                      id="discountTotal"
+                      class="text-white text-base font-semibold text-right w-24"
+                    >
+                      0.00
+                    </span>
+                  </div>
+                </div>
+                <!-- ADDITIONAL DISHES -->
+                <div class="flex justify-between items-center mb-2 mr-5">
+                  <span class="text-base text-white">Additional Dishes</span>
+
+                  <div class="flex items-center gap-1">
+                    <span class="text-white">₱</span>
+                    <span
+                      id="Additional-dishTotal"
+                      class="text-white text-base font-semibold text-right w-24"
+                    >
+                      0.00
+                    </span>
+                  </div>
+                </div>
+
+                <!-- DIVIDER -->
+                <div class="border-t border-gray-600 my-3"></div>
+
+                <!-- TOTAL -->
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-base text-white">Total Amount</span>
+
+                  <div class="flex items-center gap-1">
+                    <span class="text-white">₱</span>
+                    <span
+                      id="totalAmount"
+                      class="text-white text-base font-semibold text-right w-24"
+                    >
+                      0.00
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 flex flex-col items-center">
+            <button
+              type="submit"
+              class="w-full max-w-md py-4 bg-[#1a1a2e] text-white rounded-2xl font-black text-lg shadow-lg hover:bg-[#2a2a4e] hover:-translate-y-1 transition-all duration-200"
+            >
+              RECORD ORDER
+            </button>
+            <div
+              id="successMsg"
+              class="hidden mt-4 text-green-600 font-bold bg-green-50 px-6 py-2 rounded-full border border-green-100"
+            >
+              ✓ Order recorded successfully!
+            </div>
+          </div>
+        </form>
       </div>
-    </div>
-    <script src="js/encoder.js"></script>
+    </main>
+
+    <script src="js/encoder.js" type="module"></script>
   </body>
 </html>

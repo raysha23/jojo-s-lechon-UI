@@ -1,4 +1,6 @@
-//File Path: js/login.js
+// =======================
+// DEMO USERS
+// =======================
 const demoUsers = {
   admin: {
     username: "admin",
@@ -12,24 +14,50 @@ const demoUsers = {
   },
 };
 
-// TAB SWITCHING
+// =======================
+// ELEMENTS
+// =======================
 const tabs = document.querySelectorAll(".tabs button");
 const btn = document.querySelector(".btn");
 
-tabs.forEach((t) => {
-  t.addEventListener("click", () => {
-    tabs.forEach((b) => b.classList.remove("active"));
-    t.classList.add("active");
-    btn.textContent = "Sign In as " + t.textContent;
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+
+// =======================
+// TAB SWITCHING
+// =======================
+let activeRole = "Encoder";
+
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    tabs.forEach((t) => {
+      t.classList.remove(
+        "bg-white",
+        "shadow-sm",
+        "text-[#1a1a2e]",
+        "font-semibold",
+      );
+      t.classList.add("text-gray-500", "font-medium");
+    });
+
+    tab.classList.add(
+      "bg-white",
+      "shadow-sm",
+      "text-[#1a1a2e]",
+      "font-semibold",
+    );
+
+    activeRole = tab.textContent.trim();
+    btn.textContent = "Sign In as " + activeRole;
   });
 });
 
+// =======================
 // LOGIN
+// =======================
 btn.addEventListener("click", function () {
-  const activeRole = document.querySelector(".tabs button.active").textContent;
-
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const username = usernameInput.value;
+  const password = passwordInput.value;
 
   let user = null;
 
