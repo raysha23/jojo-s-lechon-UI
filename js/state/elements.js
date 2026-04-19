@@ -50,3 +50,4 @@ export const customerName = document.getElementById("customerName");
 export const nameError = document.getElementById("nameError");
 export const facebookProfile = document.getElementById("facebookProfile");
 export const fbError = document.getElementById("fbError");
+export const contactNumber = document.getElementById("contactNumber");

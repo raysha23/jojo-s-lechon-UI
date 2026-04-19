@@ -1,6 +1,7 @@
 // main.js
 import { setAll } from "./steps/step1.js";
 import { initStep1Listeners } from "./steps/step1.js";
+import { initStep2Listeners } from "./steps/step2.js";
 import { formatCurrency } from "./helper/helper.js";
 
 
@@ -17,4 +18,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setAll(".packageAmount", formatCurrency(0));
 
   initStep1Listeners();
+  initStep2Listeners();
 });

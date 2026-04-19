@@ -1,7 +1,6 @@
 // =============================
 // STEP 2 - Customer Info
 // =============================
-
 import {
   contactList,
   addContactBtn,
@@ -10,19 +9,25 @@ import {
   nameError,
   facebookProfile,
   fbError,
-} from "../state/elements";
+  contactNumber,
+} from "../state/elements.js";
 
 const MAX_CONTACTS = 2;
 
-// ─── CUSTOMER NAME ───────────────────────────────────────────
-customerName.addEventListener("input", () => {
+// ─────────────────────────────────────────────────────────────
+// NAME INPUT HANDLING
+// ─────────────────────────────────────────────────────────────
+export function onCustomerNameInput() {
   customerName.value = customerName.value.replace(/[^a-zA-Z\s]/g, "");
-});
+}
 
-// blur: validate
-customerName.addEventListener("blur", () => {
-  const valid = /^[a-zA-Z\s]+$/.test(customerName.value.trim());
-  const empty = customerName.value.trim() === "";
+// ─────────────────────────────────────────────────────────────
+// NAME VALIDATION
+// ─────────────────────────────────────────────────────────────
+export function onCustomerNameBlur() {
+  const value = customerName.value.trim();
+  const valid = /^[a-zA-Z\s]+$/.test(value);
+  const empty = value === "";
 
   if (!empty && !valid) {
     nameError.classList.remove("hidden");
@@ -31,40 +36,64 @@ customerName.addEventListener("blur", () => {
     nameError.classList.add("hidden");
     customerName.classList.remove("border-red-400", "ring-1", "ring-red-400");
   }
-});
-
-// ─── CONTACT VALIDATION HELPER ───────────────────────────────
-function attachContactValidation(input) {
-  input.addEventListener("input", () => {
-    input.value = input.value.replace(/\D/g, "");
-  });
-
-  input.addEventListener("blur", () => {
-    const valid = /^\d{7,11}$/.test(input.value.trim());
-    const empty = input.value.trim() === "";
-
-    if (!empty && !valid) {
-      contactError.classList.remove("hidden");
-      input.classList.add("border-red-400", "ring-1", "ring-red-400");
-    } else {
-      contactError.classList.add("hidden");
-      input.classList.remove("border-red-400", "ring-1", "ring-red-400");
-    }
-  });
 }
 
-// ─── UPDATE PLACEHOLDERS ─────────────────────────────────────
-function updatePlaceholders() {
+// ─────────────────────────────────────────────────────────────
+// CONTACT INPUT HANDLING (STRICT 0–9 ONLY)
+// ─────────────────────────────────────────────────────────────
+export function onContactInput(input) {
+  input.value = input.value.replace(/[^0-9]/g, "");
+}
+// ─────────────────────────────────────────────────────────────
+// CONTACT VALIDATION (STRICT DIGITS ONLY)
+// ─────────────────────────────────────────────────────────────
+export function onContactBlur(input) {
+  const value = input.value.trim();
+
+  // 🚫 must be digits only AND 7–11 length
+  const valid = /^[0-9]{7,11}$/.test(value);
+  const empty = value === "";
+
+  if (!empty && !valid) {
+    contactError.classList.remove("hidden");
+    input.classList.add("border-red-400", "ring-1", "ring-red-400");
+  } else {
+    contactError.classList.add("hidden");
+    input.classList.remove("border-red-400", "ring-1", "ring-red-400");
+  }
+}
+// ─────────────────────────────────────────────────────────────
+// ATTACH CONTACT LOGIC
+// ─────────────────────────────────────────────────────────────
+export function attachContactValidation(input) {
+  input.addEventListener("input", () => onContactInput(input));
+  input.addEventListener("blur", () => onContactBlur(input));
+}
+
+// ─────────────────────────────────────────────────────────────
+// UPDATE PLACEHOLDERS
+// ─────────────────────────────────────────────────────────────
+export function updateContactPlaceholders() {
   contactList.querySelectorAll(".contact-input").forEach((input, index) => {
     input.placeholder = `Contact number ${index + 1}`;
   });
 }
 
-// attach validation to the first input on load
-attachContactValidation(document.querySelector(".contact-input"));
-
-// ─── ADD CONTACT ─────────────────────────────────────────────
-addContactBtn.addEventListener("click", () => {
+// ─────────────────────────────────────────────────────────────
+// INIT FIRST CONTACT
+// ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// INIT FIRST CONTACT (USING STATE ELEMENT)
+// ─────────────────────────────────────────────────────────────
+export function initFirstContact() {
+  if (contactNumber) {
+    attachContactValidation(contactNumber);
+  }
+}
+// ─────────────────────────────────────────────────────────────
+// ADD CONTACT HANDLER
+// ─────────────────────────────────────────────────────────────
+export function onAddContactClick() {
   const items = contactList.querySelectorAll(".contact-item");
 
   if (items.length >= MAX_CONTACTS) {
@@ -74,36 +103,47 @@ addContactBtn.addEventListener("click", () => {
   }
 
   const index = items.length + 1;
+
   const div = document.createElement("div");
   div.className = "flex items-center gap-2 contact-item";
-  div.innerHTML = `
-    <input
-      type="text"
-      placeholder="Contact number ${index}"
-      maxlength="11"
-      class="contact-input w-full p-4 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500 text-gray-600 italic"
-    />
-    <button type="button" class="remove-contact flex items-center justify-center bg-red-500 text-white w-10 h-10 rounded-lg hover:bg-red-600 transition flex-shrink-0">✕</button>
-  `;
 
-  div.querySelector(".remove-contact").addEventListener("click", () => {
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = `Contact number ${index}`;
+  input.maxLength = 11;
+  input.className =
+    "contact-input w-full p-4 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500 text-gray-600 italic";
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.textContent = "✕";
+  btn.className =
+    "remove-contact flex items-center justify-center bg-red-500 text-white w-10 h-10 rounded-lg hover:bg-red-600 transition flex-shrink-0";
+
+  btn.addEventListener("click", () => {
     div.remove();
-    updatePlaceholders();
+    updateContactPlaceholders();
     addContactBtn.disabled = false;
     addContactBtn.classList.remove("opacity-40", "cursor-not-allowed");
   });
 
-  attachContactValidation(div.querySelector(".contact-input"));
+  attachContactValidation(input);
+
+  div.appendChild(input);
+  div.appendChild(btn);
+
   contactList.appendChild(div);
 
   if (contactList.querySelectorAll(".contact-item").length >= MAX_CONTACTS) {
     addContactBtn.disabled = true;
     addContactBtn.classList.add("opacity-40", "cursor-not-allowed");
   }
-});
+}
 
-// ─── FACEBOOK PROFILE ────────────────────────────────────────
-facebookProfile.addEventListener("blur", () => {
+// ─────────────────────────────────────────────────────────────
+// FACEBOOK VALIDATION
+// ─────────────────────────────────────────────────────────────
+export function onFacebookBlur() {
   const value = facebookProfile.value.trim();
 
   if (value === "") {
@@ -131,10 +171,12 @@ facebookProfile.addEventListener("blur", () => {
       "ring-red-400",
     );
   }
-});
+}
 
-// ─── STEP 2 VALIDATION GATE ───────────────────────────────────
-function validateStep2() {
+// ─────────────────────────────────────────────────────────────
+// STEP 2 VALIDATION GATE
+// ─────────────────────────────────────────────────────────────
+export function validateStep2() {
   const name = customerName.value.trim();
   const contacts = [...document.querySelectorAll(".contact-input")].map((i) =>
     i.value.trim(),
@@ -149,4 +191,18 @@ function validateStep2() {
     /^https?:\/\/(www\.)?(facebook\.com|fb\.com|fb\.me)\/.+/i.test(fb);
 
   return nameOk && contactOk && fbOk;
+}
+
+// ─────────────────────────────────────────────────────────────
+// INIT LISTENERS (LIKE STEP 1 STYLE)
+// ─────────────────────────────────────────────────────────────
+export function initStep2Listeners() {
+  customerName.addEventListener("input", onCustomerNameInput);
+  customerName.addEventListener("blur", onCustomerNameBlur);
+
+  facebookProfile.addEventListener("blur", onFacebookBlur);
+
+  addContactBtn.addEventListener("click", onAddContactClick);
+
+  initFirstContact();
 }
