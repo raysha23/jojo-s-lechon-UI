@@ -14,5 +14,13 @@
     "autoprefixer": "^10.5.0",
     "postcss": "^8.5.10",
     "tailwindcss": "^3.4.19"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raysha23/jojo-s-lechon-UI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/raysha23/jojo-s-lechon-UI/issues"
+  },
+  "homepage": "https://github.com/raysha23/jojo-s-lechon-UI#readme"
 }

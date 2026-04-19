@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jojo's Lechon - Customer Information</title>
+    <style>
+      /* Card & Form Specifics */
+      .form-container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .field-label {
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        color: #444;
+        margin-bottom: 12px;
+      }
+
+      .full-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        box-sizing: border-box; /* Ensures padding doesn't break width */
+        color: #555;
+      }
+
+      .full-input:focus {
+        outline: none;
+        border-color: var(--primary-red);
+      }
+
+      .address-box {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .margin-bottom {
+        margin-bottom: 10px;
+      }
+
+      /* Form Grid for Date/Time */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      /* Stepper Completed State */
+      .step.completed span {
+        background: var(--primary-red);
+        color: white;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .step-line.active {
+        background: var(--primary-red);
+        height: 3px;
+      }
+
+      /* Buttons */
+      .outline-btn {
+        background: white;
+        color: var(--primary-red);
+        border: 1px solid #ffcccc;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .footer-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .prev-btn {
+        background: white;
+        border: 1px solid #ddd;
+        padding: 10px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      :root {
+        --primary-red: #c61a1a;
+        --bg-gray: #f4f7f6;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-gray);
+        margin: 0;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header & Stepper */
+      .header h1 {
+        color: var(--primary-red);
+        margin: 0;
+        font-size: 24px;
+      }
+      .header p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .stepper {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 20px 0;
+        box-shadow: var(--card-shadow);
+      }
+
+      .step {
+        text-align: center;
+        color: #ccc;
+      }
+      .step.active {
+        color: var(--primary-red);
+      }
+      .step span {
+        font-size: 24px;
+        display: block;
+      }
+      .step-line {
+        flex-grow: 1;
+        height: 1px;
+        background: #eee;
+        margin: 0 20px;
+      }
+
+      /* Grid Layout */
+      .dashboard-content {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 20px;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: var(--card-shadow);
+      }
+
+      .card-header {
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+      }
+      .card-header .icon {
+        background: var(--primary-red);
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+        margin-right: 10px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+      }
+
+      .package-highlight {
+        background: #fff5f5;
+        border-left: 4px solid var(--primary-red);
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .price {
+        color: var(--primary-red);
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      /* Dishes Section */
+      .card-header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .add-btn {
+        background: var(--primary-red);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .dish-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+      }
+
+      .counter {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .counter button {
+        border: none;
+        background: none;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .counter input {
+        width: 30px;
+        text-align: center;
+        border: none;
+      }
+
+      /* Freebies */
+      .freebie-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .freebie-item {
+        background: #eefdf6;
+        border: 1px solid #d4f5e6;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #2d7a5d;
+      }
+      .badge {
+        background: #eefdf6;
+        color: #2d7a5d;
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+
+      /* Summary Sidebar */
+      .summary-card {
+        background: #000;
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        position: sticky;
+        top: 20px;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+        font-size: 14px;
+      }
+      .summary-row small {
+        color: #888;
+      }
+      .total-box {
+        background: var(--primary-red);
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .total-price {
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .summary-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        text-align: center;
+        border-top: 1px solid #333;
+        padding-top: 15px;
+      }
+      .stat span {
+        color: #3498db;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .footer-actions {
+        text-align: right;
+        margin-top: 20px;
+      }
+      .next-btn {
+        background: var(--primary-red);
+        color: white;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo-section">
+          <div class="logo-icon">🐷</div>
+          <div>
+            <h1>Jojo's Lechon</h1>
+            <p>Order Encoder Dashboard</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="stepper">
+        <div class="step completed">
+          <span>✓</span>
+          <p>Order Details</p>
+        </div>
+        <div class="step-line active"></div>
+        <div class="step active">
+          <span>👤</span>
+          <p>Customer Information</p>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <span>📄</span>
+          <p>Order Summary</p>
+        </div>
+      </div>
+
+      <main class="form-container">
+        <div class="card">
+          <label class="field-label">Customer Name</label>
+          <input type="text" placeholder="Enter full name" class="full-input" />
+        </div>
+
+        <div class="card">
+          <label class="field-label">Contact Numbers</label>
+          <div id="contact-list">
+            <input
+              type="text"
+              placeholder="Contact number 1"
+              class="full-input margin-bottom"
+            />
+          </div>
+          <button type="button" class="outline-btn" onclick="addContactField()">
+            + Add Another Number
+          </button>
+        </div>
+
+        <div class="card">
+          <label class="field-label">Facebook Profile (Optional)</label>
+          <input
+            type="text"
+            placeholder="https://facebook.com/..."
+            class="full-input"
+          />
+        </div>
+
+        <div class="card">
+          <label class="field-label">Delivery Address</label>
+          <textarea
+            placeholder="Enter complete delivery address"
+            class="full-input address-box"
+          ></textarea>
+        </div>
+
+        <div class="form-grid">
+          <div class="card">
+            <label class="field-label">Delivery Date</label>
+            <input type="date" class="full-input" />
+          </div>
+          <div class="card">
+            <label class="field-label">Delivery Time</label>
+            <input type="time" class="full-input" />
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer-nav">
+        <button class="prev-btn" onclick="window.history.back()">
+          ❮ Previous
+        </button>
+        <button class="next-btn">Next ❯</button>
+      </footer>
+    </div>
+
+    <script>
+      function addContactField() {
+        const contactList = document.getElementById("contact-list");
+        const count = contactList.getElementsByTagName("input").length + 1;
+
+        const newInput = document.createElement("input");
+        newInput.type = "text";
+        newInput.placeholder = `Contact number ${count}`;
+        newInput.className = "full-input margin-bottom";
+
+        contactList.appendChild(newInput);
+      }
+
+      // Optional: Form Validation Logic
+      document.querySelector(".next-btn").addEventListener("click", () => {
+        // Basic check for name
+        const nameInput = document.querySelector(
+          'input[placeholder="Enter full name"]',
+        );
+        if (nameInput.value.trim() === "") {
+          alert("Please enter the customer's name.");
+          nameInput.style.borderColor = "red";
+        } else {
+          // Proceed to next page
+          console.log("Proceeding to Order Summary...");
+        }
+      });
+    </script>
+  </body>
+</html>

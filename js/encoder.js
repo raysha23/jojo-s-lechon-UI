@@ -19,28 +19,28 @@ const state = {
 // ─────────────────────────────────────────────────────────────
 // AUTH
 // ─────────────────────────────────────────────────────────────
-const user = JSON.parse(localStorage.getItem("loggedUser") || "null");
+// const user = JSON.parse(localStorage.getItem("loggedUser") || "null");
 
-if (!user || user.role !== "Encoder") {
-  window.location.href = "index.html";
-}
+// if (!user || user.role !== "Encoder") {
+//   window.location.href = "index.html";
+// }
 
-document.getElementById("userName").textContent = user?.username || "";
+// document.getElementById("userName").textContent = user?.username || "";
 
 // ─────────────────────────────────────────────────────────────
 // LOGOUT
 // ─────────────────────────────────────────────────────────────
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  localStorage.removeItem("loggedUser");
-  window.location.href = "index.html";
-});
+// document.getElementById("logoutBtn").addEventListener("click", () => {
+//   localStorage.removeItem("loggedUser");
+//   window.location.href = "index.html";
+// });
 
 // ─────────────────────────────────────────────────────────────
 // ELEMENTS
 // ─────────────────────────────────────────────────────────────
 const packageSection = document.getElementById("packageSection");
 const packageSelect = document.getElementById("packageSelect");
-const packageAmountInput = document.getElementById("packageAmount");
+const packageAmountInput = document.querySelectorAll(".packageAmount");
 
 const dishSection = document.getElementById("dishSection");
 const dishList = document.getElementById("dishList");
@@ -89,9 +89,9 @@ function runReset(options = {}) {
       totalAmountInput,
       dishList,
       setFreebies,
-      dishesTotalInput,        
-      additionalDishTotal: additionalDishTotalInput,  
-      discountTotal,           
+      dishesTotalInput,
+      additionalDishTotal: additionalDishTotalInput,
+      discountTotal,
     },
     options,
   });
@@ -212,21 +212,45 @@ function populatePackageDropdown(type) {
 function setFreebies(freebies = []) {
   freebieList.innerHTML = "";
 
+  // No freebies case
   if (!freebies.length) {
     freebieList.innerHTML = `
-      <div class="item">
-        <input readonly class="w-full p-3 bg-gray-100 rounded-xl text-sm italic"
-        value="No freebies" />
-      </div>`;
+      <div class="col-span-full text-center text-gray-400 italic text-sm">
+        No freebies available
+      </div>
+    `;
     return;
   }
 
+  // Generate each freebie card
   freebies.forEach((f) => {
     const div = document.createElement("div");
-    div.className = "item";
+
+    div.className =
+      "flex items-center space-x-3 bg-emerald-50/50 border border-emerald-100 p-3 rounded-xl";
+
     div.innerHTML = `
-      <input readonly class="w-full p-3 bg-white rounded-xl text-sm" value="${f}" />
+      <div class="bg-emerald-500 rounded-full p-0.5">
+        <svg
+          class="w-3 h-3 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="3"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+      </div>
+
+      <span class="text-sm font-medium text-emerald-800">
+        ${f}
+      </span>
     `;
+
     freebieList.appendChild(div);
   });
 }
@@ -346,7 +370,10 @@ packageSelect.addEventListener("change", () => {
   // store RAW number for calculations
 
   // display formatted
-  packageAmountInput.textContent = formatCurrency(pkg.amount); // not .value
+  // packageAmountInput.textContent = formatCurrency(pkg.amount); // not .value
+  packageAmountInput.forEach((el) => {
+    el.textContent = `₱${formatCurrency(pkg.amount)}`;
+  });
 
   // ✔ freebies display
   setFreebies(pkg.freebies);

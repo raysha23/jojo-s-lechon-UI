@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jojo's Lechon - Order Summary</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      :root {
+        --primary-red: #c61a1a;
+        --bg-gray: #f4f7f6;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-gray);
+        margin: 0;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header & Stepper */
+      .header h1 {
+        color: var(--primary-red);
+        margin: 0;
+        font-size: 24px;
+      }
+      .header p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .stepper {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 20px 0;
+        box-shadow: var(--card-shadow);
+      }
+
+      .step {
+        text-align: center;
+        color: #ccc;
+      }
+      .step.active {
+        color: var(--primary-red);
+      }
+      .step span {
+        font-size: 24px;
+        display: block;
+      }
+      .step-line {
+        flex-grow: 1;
+        height: 1px;
+        background: #eee;
+        margin: 0 20px;
+      }
+
+      /* Grid Layout */
+      .dashboard-content {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 20px;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: var(--card-shadow);
+      }
+
+      .card-header {
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+      }
+      .card-header .icon {
+        background: var(--primary-red);
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+        margin-right: 10px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+      }
+
+      .package-highlight {
+        background: #fff5f5;
+        border-left: 4px solid var(--primary-red);
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .price {
+        color: var(--primary-red);
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      /* Dishes Section */
+      .card-header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .add-btn {
+        background: var(--primary-red);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .dish-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+      }
+
+      .counter {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .counter button {
+        border: none;
+        background: none;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .counter input {
+        width: 30px;
+        text-align: center;
+        border: none;
+      }
+
+      /* Freebies */
+      .freebie-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .freebie-item {
+        background: #eefdf6;
+        border: 1px solid #d4f5e6;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #2d7a5d;
+      }
+      .badge {
+        background: #eefdf6;
+        color: #2d7a5d;
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+
+      /* Summary Sidebar */
+      .summary-card {
+        background: #000;
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        position: sticky;
+        top: 20px;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+        font-size: 14px;
+      }
+      .summary-row small {
+        color: #888;
+      }
+      .total-box {
+        background: var(--primary-red);
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .total-price {
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .summary-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        text-align: center;
+        border-top: 1px solid #333;
+        padding-top: 15px;
+      }
+      .stat span {
+        color: #3498db;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .footer-actions {
+        text-align: right;
+        margin-top: 20px;
+      }
+      .next-btn {
+        background: var(--primary-red);
+        color: white;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      /* Review Table Styles */
+      .card-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-row .label {
+        color: #888;
+      }
+
+      .detail-row .value {
+        font-weight: bold;
+        color: #000;
+      }
+
+      /* Item Lines */
+      .item-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        font-size: 15px;
+      }
+
+      /* Freebie Section Review */
+      .freebie-card {
+        background-color: #f0fff8; /* Light green tint */
+        border: 1px solid #d4f5e6;
+      }
+
+      .card-title-green {
+        color: #2d7a5d;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .freebie-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .freebie-list li {
+        font-size: 13px;
+        color: #2d7a5d;
+      }
+
+      /* Big Red Record Button */
+      .record-btn {
+        width: 100%;
+        background-color: var(--primary-red);
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+        text-transform: uppercase;
+      }
+
+      .record-btn:hover {
+        background-color: #a51616;
+      }
+
+      .footer-nav-simple {
+        margin-top: 20px;
+        padding-bottom: 40px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo-section">
+          <div class="logo-icon">🐷</div>
+          <div>
+            <h1>Jojo's Lechon</h1>
+            <p>Order Encoder Dashboard</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="stepper">
+        <div class="step completed">
+          <span>✓</span>
+          <p>Order Details</p>
+        </div>
+        <div class="step-line active"></div>
+        <div class="step completed">
+          <span>✓</span>
+          <p>Customer Information</p>
+        </div>
+        <div class="step-line active"></div>
+        <div class="step active">
+          <span>📄</span>
+          <p>Order Summary</p>
+        </div>
+      </div>
+
+      <main class="dashboard-content">
+        <section class="config-panel">
+          <div class="card">
+            <h3 class="card-title">Customer Details</h3>
+            <div class="detail-row">
+              <span class="label">Name:</span>
+              <span class="value">N/A</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Contact:</span>
+              <span class="value">N/A</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Delivery Date:</span>
+              <span class="value">N/A</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Delivery Time:</span>
+              <span class="value">N/A</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Order Items</h3>
+            <div class="item-line">
+              <span>Medium Package (Delivery)</span>
+              <strong>₱5,500</strong>
+            </div>
+            <div class="item-line">
+              <span>Lumpiang Shanghai x1</span>
+              <strong>₱250</strong>
+            </div>
+          </div>
+
+          <div class="card freebie-card">
+            <h3 class="card-title-green">Included Freebies</h3>
+            <ul class="freebie-list">
+              <li>✓ Disposable Plates & Utensils</li>
+              <li>✓ Lechon Sauce (Special Recipe)</li>
+              <li>✓ Beverage Dispenser</li>
+              <li>✓ Table Setup & Arrangement</li>
+            </ul>
+          </div>
+
+          <button class="record-btn">RECORD ORDER ✓</button>
+        </section>
+
+        <aside class="summary-panel">
+          <div class="summary-card">
+            <h3>Order Summary</h3>
+            <hr />
+            <div class="summary-row">
+              <span
+                >Package Total<br /><small
+                  >Medium Package (Delivery)</small
+                ></span
+              >
+              <strong>₱5,500</strong>
+            </div>
+            <div class="summary-row">
+              <span>Dishes Total<br /><small>1 item</small></span>
+              <strong>₱250</strong>
+            </div>
+            <div class="summary-row">
+              <span>Additional Charges<br /><small>Delivery fee</small></span>
+              <strong>₱200</strong>
+            </div>
+            <hr />
+            <div class="summary-row">
+              <span>SUBTOTAL</span>
+              <strong>₱5,750</strong>
+            </div>
+
+            <div class="total-box">
+              <div class="total-label">
+                <span class="total-tag">TOTAL AMOUNT</span>
+                <span>With Delivery</span>
+              </div>
+              <div class="total-price">₱5,950</div>
+            </div>
+
+            <div class="summary-stats">
+              <div class="stat"><span>1</span><br />Dishes</div>
+              <div class="stat"><span>4</span><br />Freebies</div>
+              <div class="stat"><span>1</span><br />Package</div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer-nav-simple">
+        <button class="prev-btn" onclick="window.history.back()">
+          ❮ Previous
+        </button>
+      </footer>
+    </div>
+  </body>
+</html>
