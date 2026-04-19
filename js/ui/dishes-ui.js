@@ -49,7 +49,7 @@ export function addExtraDish() {
     <select class="flex-1 p-3 bg-white border border-gray-200 rounded-xl outline-none">
       <option value="">— Select Dish —</option>
     </select>
-    <button type="button" class="text-red-400 hover:text-red-600 px-2 remove-dish">✕</button>
+    <button type="button" class="remove-dish mt-1 bg-red-500 text-white px-3 py-2 h-10 align-middle rounded-lg hover:bg-red-600 transition" > ✕ </button>
   `;
 
   dishList.appendChild(div);

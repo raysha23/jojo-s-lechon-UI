@@ -7,13 +7,10 @@ const steps = {
 };
 
 const nextBtns = document.querySelectorAll(".nextBtn");
-const backBtn = document.querySelector(".backBtn"); // ✅ FIXED (single element)
+const backBtns = document.querySelectorAll(".backBtn"); // FIXED
 
 const nextText = document.getElementById("nextText");
 
-// =============================
-// STEP UI UPDATE
-// =============================
 function updateStepperUI(step) {
   for (let i = 1; i <= 3; i++) {
     const el = document.getElementById(`step-circle-${i}`);
@@ -29,14 +26,22 @@ function updateStepperUI(step) {
   }
 }
 
-// =============================
-// SHOW STEP
-// =============================
-function goToStep(step) {
-  if (step < 1 || step > 3) return;
+function updateButtons() {
+  backBtns.forEach((btn) => {
+    btn.classList.toggle("hidden", currentStep === 1);
+  });
 
+  if (nextText) {
+    nextText.innerText = currentStep === 3 ? "Finish" : "Next";
+  }
+}
+
+function goToStep(step) {
   Object.values(steps).forEach((el) => el.classList.add("hidden"));
-  steps[step].classList.remove("hidden");
+
+  if (steps[step]) {
+    steps[step].classList.remove("hidden");
+  }
 
   currentStep = step;
 
@@ -44,22 +49,7 @@ function goToStep(step) {
   updateStepperUI(step);
 }
 
-// =============================
-// BUTTON UI STATE
-// =============================
-function updateButtons() {
-  if (backBtn) {
-    backBtn.classList.toggle("hidden", currentStep === 1);
-  }
-
-  if (nextText) {
-    nextText.innerText = currentStep === 3 ? "Finish" : "Next";
-  }
-}
-
-// =============================
-// NEXT BUTTONS
-// =============================
+// NEXT BUTTON
 nextBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (currentStep < 3) {
@@ -70,18 +60,14 @@ nextBtns.forEach((btn) => {
   });
 });
 
-// =============================
 // BACK BUTTON
-// =============================
-if (backBtn) {
-  backBtn.addEventListener("click", () => {
+backBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
     if (currentStep > 1) {
       goToStep(currentStep - 1);
     }
   });
-}
+});
 
-// =============================
 // INIT
-// =============================
 goToStep(1);

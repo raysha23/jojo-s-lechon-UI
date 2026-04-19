@@ -391,7 +391,7 @@
             </div>
           </div>
 
-          <div class="lg:col-span-1">
+          <div id="THISONE" class="lg:col-span-1 sticky top-6 self-start">
             <div
               class="bg-[#0d0d0d] text-white rounded-3xl p-8 top-8 shadow-2xl"
             >
@@ -498,7 +498,12 @@
                       With delivery
                     </p>
                   </div>
-                  <p id="totalAmount" class="text-4xl font-black">0.00</p>
+                  <p
+                    id="totalAmount"
+                    class="text-2xl sm:text-3xl lg:text-3xl font-black"
+                  >
+                    0.00
+                  </p>
                 </div>
 
                 <div class="grid grid-cols-3 pt-6 border-t border-gray-800">
@@ -663,6 +668,7 @@
           </div>
         </div>
         <div class="space-y-6">
+          <!-- Customer Name -->
           <div
             class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
           >
@@ -671,31 +677,52 @@
             >
             <input
               type="text"
+              id="customerName"
               placeholder="Enter full name"
               class="w-full p-4 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500 transition-all text-gray-600 italic"
             />
+            <p
+              id="nameError"
+              class="hidden mt-2 text-xs text-red-500 font-medium"
+            >
+              ⚠ Name must contain letters only.
+            </p>
           </div>
 
+          <!-- Contact Numbers -->
           <div
             class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
           >
             <label class="block text-sm font-bold text-gray-700 mb-3"
               >Contact Numbers</label
             >
-            <div class="space-y-3">
-              <input
-                type="text"
-                placeholder="Contact number 1"
-                class="w-full p-4 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500 text-gray-600 italic"
-              />
-              <button
-                class="px-4 py-2 border border-red-500 text-red-500 rounded-lg text-sm font-bold flex items-center hover:bg-red-50 transition-colors"
-              >
-                <span class="mr-2 text-lg">+</span> Add Another Number
-              </button>
+
+            <div id="contactList" class="space-y-3">
+              <div class="flex items-center gap-2 contact-item">
+                <input
+                  type="text"
+                  placeholder="Contact number 1"
+                  maxlength="11"
+                  class="contact-input w-full p-4 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500 text-gray-600 italic"
+                />
+              </div>
             </div>
+            <p
+              id="contactError"
+              class="hidden mt-2 text-xs text-red-500 font-medium"
+            >
+              ⚠ Contact number must contain numbers only.
+            </p>
+
+            <button
+              id="addContactBtn"
+              class="mt-3 px-4 py-2 border border-red-500 text-red-500 rounded-lg text-sm font-bold flex items-center hover:bg-red-50 transition-colors"
+            >
+              <span class="mr-2 text-lg">+</span> Add Another Number
+            </button>
           </div>
 
+          <!-- Facebook -->
           <div
             class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
           >
@@ -704,9 +731,16 @@
             >
             <input
               type="text"
+              id="facebookProfile"
               placeholder="https://facebook.com/..."
               class="w-full p-4 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-red-500 text-gray-600 italic"
             />
+            <p
+              id="fbError"
+              class="hidden mt-2 text-xs text-red-500 font-medium"
+            >
+              ⚠ Must be a valid Facebook URL (facebook.com or fb.com).
+            </p>
           </div>
         </div>
         <div class="mt-8 flex justify-between items-center">
@@ -851,6 +885,279 @@
             </div>
           </div>
         </div>
+        <div
+          class="min-h-screen bg-gray-100 p-4 md:p-8 font-sans text-gray-900"
+        >
+          <div class="mx-auto max-w-6xl">
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              <div class="lg:col-span-2 space-y-6">
+                <div class="rounded-xl bg-white p-6 shadow-md">
+                  <h2 class="mb-4 text-lg font-bold">Customer Details</h2>
+                  <div class="space-y-4 text-sm">
+                    <div class="flex justify-between border-b pb-2">
+                      <span class="text-gray-500">Name:</span>
+                      <span class="font-bold uppercase">N/A</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                      <span class="text-gray-500">Contact:</span>
+                      <span class="font-bold uppercase">N/A</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                      <span class="text-gray-500">Delivery Date:</span>
+                      <span class="font-bold uppercase">N/A</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                      <span class="text-gray-500">Delivery Time:</span>
+                      <span class="font-bold uppercase">N/A</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rounded-xl bg-white p-6 shadow-md">
+                  <h2 class="mb-4 text-lg font-bold">Order Items</h2>
+                  <div class="space-y-4 text-sm">
+                    <div class="flex justify-between border-b pb-2">
+                      <span>Medium Package (Delivery)</span>
+                      <span class="font-bold">₱5,500</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                      <span>Pork BBQ Skewers (10pcs) x1</span>
+                      <span class="font-bold">₱450</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                      <span>Beef Caldereta x2</span>
+                      <span class="font-bold">₱1,000</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                      <span>Chopsuey x1</span>
+                      <span class="font-bold">₱280</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Freebies -->
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+                >
+                  <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                      <div
+                        class="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center"
+                      >
+                        <svg
+                          class="w-6 h-6 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"
+                          />
+                        </svg>
+                      </div>
+                      <h2 class="text-xl font-bold text-gray-800">
+                        Included Freebies
+                      </h2>
+                    </div>
+                    <span
+                      class="bg-emerald-100 text-emerald-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase"
+                      >Auto-Generated</span
+                    >
+                  </div>
+                  <div
+                    id="freebieList"
+                    class="grid grid-cols-1 md:grid-cols-2 gap-3"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- ORDER SUMMARY -->
+              <div
+                class="bg-[#0d0d0d] text-white rounded-3xl p-8 top-8 shadow-2xl"
+              >
+                <h2 class="text-2xl font-black mb-1">Order Summary</h2>
+                <div class="w-12 h-1 bg-red-600 mb-8"></div>
+
+                <div class="space-y-5">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="font-bold text-sm tracking-tight">
+                        Package total
+                      </p>
+                      <p class="text-[10px] text-gray-500 font-medium">
+                        Premium package (delivery)
+                      </p>
+                    </div>
+                    <p
+                      id="packageAmount"
+                      class="packageAmount font-bold text-lg"
+                    >
+                      ₱0.00
+                    </p>
+                  </div>
+
+                  <div
+                    class="flex justify-between items-start border-t border-gray-800 pt-4"
+                  >
+                    <div>
+                      <p class="font-bold text-sm tracking-tight">
+                        Dishes total
+                      </p>
+                      <p class="text-[10px] text-gray-500 font-medium">
+                        0 items
+                      </p>
+                    </div>
+                    <p id="dishesTotal" class="font-bold text-lg">₱0</p>
+                  </div>
+
+                  <div
+                    class="flex justify-between items-start border-t border-gray-800 pt-4"
+                  >
+                    <div>
+                      <p class="font-bold text-sm tracking-tight">
+                        Additional dishes total
+                      </p>
+                      <p class="text-[10px] text-gray-500 font-medium">
+                        0 items
+                      </p>
+                    </div>
+                    <p id="Additional-dishTotal" class="font-bold text-lg">
+                      ₱0.00
+                    </p>
+                  </div>
+
+                  <div
+                    class="flex justify-between items-start border-t border-gray-800 pt-4"
+                  >
+                    <div>
+                      <p
+                        class="font-bold text-sm tracking-tight text-emerald-500"
+                      >
+                        Discount
+                      </p>
+                      <p class="text-[10px] text-gray-500 font-medium">
+                        Premium package bonus
+                      </p>
+                    </div>
+                    <p
+                      id="discountTotal"
+                      class="font-bold text-lg text-emerald-500"
+                    >
+                      0.00
+                    </p>
+                  </div>
+
+                  <div
+                    class="flex justify-between items-start border-t border-gray-800 pt-4"
+                  >
+                    <div>
+                      <p class="font-bold text-sm tracking-tight">
+                        Additional charges
+                      </p>
+                      <p class="text-[10px] text-gray-500 font-medium">
+                        Delivery fee
+                      </p>
+                    </div>
+                    <p id="additionalCharge" class="font-bold text-lg">₱200</p>
+                  </div>
+
+                  <div
+                    class="flex justify-between items-center border-t border-gray-800 pt-5"
+                  >
+                    <p
+                      class="text-gray-500 font-bold uppercase text-[10px] tracking-widest"
+                    >
+                      SUBTOTAL
+                    </p>
+                    <p id="subTotal" class="text-xl font-bold tracking-tight">
+                      ₱12,000
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-red-600 rounded-2xl p-5 flex justify-between items-center mt-6"
+                  >
+                    <div>
+                      <p
+                        class="text-[10px] font-bold uppercase opacity-90 leading-none mb-1"
+                      >
+                        TOTAL AMOUNT
+                      </p>
+                      <p class="text-[11px] font-medium opacity-80">
+                        With delivery
+                      </p>
+                    </div>
+                    <p
+                      id="totalAmount"
+                      class="text-2xl sm:text-3xl lg:text-3xl font-black"
+                    >
+                      0.00
+                    </p>
+                  </div>
+
+                  <div class="grid grid-cols-3 pt-6 border-t border-gray-800">
+                    <div class="text-center">
+                      <p
+                        id="noOfDishes"
+                        class="text-red-500 text-2xl font-bold leading-none mb-1"
+                      >
+                        0
+                      </p>
+                      <p
+                        class="text-[9px] text-gray-500 font-bold uppercase tracking-wider"
+                      >
+                        DISHES
+                      </p>
+                    </div>
+                    <div class="text-center border-x border-gray-800">
+                      <p
+                        id="noOfFreebies"
+                        class="text-emerald-500 text-2xl font-bold leading-none mb-1"
+                      >
+                        6
+                      </p>
+                      <p
+                        class="text-[9px] text-gray-500 font-bold uppercase tracking-wider"
+                      >
+                        FREEBIES
+                      </p>
+                    </div>
+                    <div class="text-center">
+                      <p
+                        id="noOfPackage"
+                        class="text-blue-400 text-2xl font-bold leading-none mb-1"
+                      >
+                        1
+                      </p>
+                      <p
+                        class="text-[9px] text-gray-500 font-bold uppercase tracking-wider"
+                      >
+                        PACKAGE
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 space-y-4">
+              <button
+                class="w-full rounded-lg bg-red-600 py-4 text-xl font-black text-white hover:bg-red-700 active:scale-[0.99] transition-all flex justify-center items-center gap-3"
+              >
+                RECORD ORDER <span class="text-2xl leading-none italic">✓</span>
+              </button>
+              <button
+                class="flex items-center gap-2 rounded-lg bg-white px-6 py-2.5 text-xs font-bold text-gray-500 shadow-sm border border-gray-200 hover:bg-gray-50"
+              >
+                <span class="text-lg">‹</span> Previous
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--
         <div class="lg:col-span-2 space-y-6">
           <div
             class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
@@ -871,7 +1178,7 @@
                   </tr>
                   <tr>
                     <td class="p-4 text-gray-400 font-medium">
-                      Delivery Date:
+                      Facebook link:
                     </td>
                     <td class="p-4 text-right font-bold text-gray-800">N/A</td>
                   </tr>
@@ -905,111 +1212,6 @@
               </div>
             </div>
           </div>
-
-          <!-- <div
-            class="bg-emerald-50/50 rounded-2xl border border-emerald-100 p-6"
-          >
-            <h2 class="text-emerald-800 font-bold mb-4">Included Freebies</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3">
-              <div class="flex items-center text-xs font-bold text-emerald-700">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Disposable Plates & Utensils
-              </div>
-              <div class="flex items-center text-xs font-bold text-emerald-700">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Lechon Sauce (Special Recipe)
-              </div>
-              <div class="flex items-center text-xs font-bold text-emerald-700">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Beverage Dispenser
-              </div>
-              <div class="flex items-center text-xs font-bold text-emerald-700">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Table Setup & Arrangement
-              </div>
-              <div class="flex items-center text-xs font-bold text-emerald-700">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Serving Trays
-              </div>
-              <div class="flex items-center text-xs font-bold text-emerald-700">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Ice Bucket
-              </div>
-            </div>
-          </div> -->
-
           <button
             class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-red-200 flex items-center justify-center space-x-3 transition-all active:scale-[0.98]"
           >
@@ -1028,7 +1230,7 @@
               />
             </svg>
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
     <script src="js/encoder.js" type="module"></script>
