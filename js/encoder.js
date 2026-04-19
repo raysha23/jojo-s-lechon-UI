@@ -46,6 +46,8 @@ const dishSection = document.getElementById("dishSection");
 const dishList = document.getElementById("dishList");
 const dishTotalInput = document.getElementById("dishTotal");
 
+const additionalChargeTotal = document.getElementById("additionalCharge");
+const subtotal = document.getElementById("subTotal");
 const discountTotal = document.getElementById("discountTotal");
 const totalAmountInput = document.getElementById("totalAmount");
 
@@ -70,12 +72,14 @@ function hide(el) {
 }
 
 function formatCurrency(value = 0) {
-  return Number(value).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  return (
+    "₱" +
+    Number(value).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  );
 }
-
 // ─────────────────────────────────────────────────────────────
 // RESET SYSTEM CONNECTOR
 // ─────────────────────────────────────────────────────────────
@@ -134,50 +138,42 @@ function recalcTotal() {
   const type = state.currentOrderType;
 
   const packagePrice = Number(state.packagePrice || 0);
-  const discount = Number(state.discount || 0); // 🔥 promo here
+  const discount = Number(state.discount || 0); // store as negative e.g. -500
+  const additionalCharges = Number(state.additionalCharges || 0); // e.g. 200
 
   let dishTotal = 0;
   let additionalTotal = 0;
 
-  console.log("📊 recalculating... TYPE:", type);
-
   if (type === "dishes") {
     document.querySelectorAll("#dishList select").forEach((sel) => {
       const index = Number(sel.value);
-
       if (!Number.isNaN(index) && dishProducts[index]) {
-        const dish = dishProducts[index];
-        dishTotal += Number(dish.amount);
+        dishTotal += Number(dishProducts[index].amount);
       }
     });
   } else {
     document.querySelectorAll(".extra-dish select").forEach((sel) => {
       const index = Number(sel.value);
-
       if (!Number.isNaN(index) && dishProducts[index]) {
-        const dish = dishProducts[index];
-        additionalTotal += Number(dish.amount);
+        additionalTotal += Number(dishProducts[index].amount);
       }
     });
   }
 
-  const subtotal =
+  // ── Subtotal = items only, before discount/charges ──
+  const subtotalValue =
     type === "dishes" ? dishTotal : packagePrice + dishTotal + additionalTotal;
 
-  const final = subtotal + discount;
-  // discount is negative (-500), so it subtracts automatically
+  // ── Final = subtotal + discount (negative) + charges ──
+  const final = subtotalValue + discount + additionalCharges;
 
-  console.log("💰 package:", packagePrice);
-  console.log("💸 discount:", discount);
-  console.log("🧮 subtotal:", subtotal);
-  console.log("💵 final:", final);
-
-  if (discountTotal) discountTotal.textContent = formatCurrency(discount);
-
+  // ── DOM updates ──
   if (dishesTotalInput)
     dishesTotalInput.textContent = formatCurrency(dishTotal);
   if (additionalDishTotalInput)
     additionalDishTotalInput.textContent = formatCurrency(additionalTotal);
+  if (discountTotal) discountTotal.textContent = formatCurrency(discount);
+  if (subtotal) subtotal.textContent = formatCurrency(subtotalValue); // 🔥 was missing
   if (totalAmountInput) totalAmountInput.textContent = formatCurrency(final);
 }
 // ─────────────────────────────────────────────────────────────
@@ -201,8 +197,9 @@ function populatePackageDropdown(type) {
     packageSelect.appendChild(opt);
   });
 
-  packageAmountInput.value = "0.00";
-  totalAmountInput.value = "0.00";
+  packageAmountInput.forEach((el) => {
+    el.textContent = formatCurrency(0);
+  });
   state.selectedPackage = null;
 }
 
@@ -334,11 +331,9 @@ function addExtraDish() {
 // ─────────────────────────────────────────────────────────────
 // EVENTS
 // ─────────────────────────────────────────────────────────────
-document.querySelectorAll('input[name="orderType"]').forEach((r) => {
-  r.addEventListener("change", (e) => {
-    state.selectedPackage = null;
-    applyOrderType(e.target.value);
-  });
+document.getElementById("productTypeSelect").addEventListener("change", (e) => {
+  state.selectedPackage = null;
+  applyOrderType(e.target.value);
 });
 
 // 🔥 Add event listener for addDish button
@@ -372,7 +367,7 @@ packageSelect.addEventListener("change", () => {
   // display formatted
   // packageAmountInput.textContent = formatCurrency(pkg.amount); // not .value
   packageAmountInput.forEach((el) => {
-    el.textContent = `₱${formatCurrency(pkg.amount)}`;
+    el.textContent = formatCurrency(pkg.amount);
   });
 
   // ✔ freebies display
@@ -396,12 +391,16 @@ packageSelect.addEventListener("change", () => {
 // ─────────────────────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────────────────────
-const defaultType = "lechon_package";
-
-const radio = document.querySelector(
-  `input[name="orderType"][value="${defaultType}"]`,
-);
-
-if (radio) radio.checked = true;
+const productTypeSelect = document.getElementById("productTypeSelect");
+const defaultType = productTypeSelect.value; // reads whatever is selected in HTML (e.g. "dishes")
 
 applyOrderType(defaultType);
+
+// 🔥 ADD THIS — force-render all currency fields on startup
+if (discountTotal) discountTotal.textContent = formatCurrency(0);
+if (additionalDishTotalInput)
+  additionalDishTotalInput.textContent = formatCurrency(0);
+if (dishesTotalInput) dishesTotalInput.textContent = formatCurrency(0);
+if (totalAmountInput) totalAmountInput.textContent = formatCurrency(0);
+if (subtotal) subtotal.textContent = formatCurrency(0);
+if (additionalChargeTotal) additionalChargeTotal.textContent = formatCurrency(0);
