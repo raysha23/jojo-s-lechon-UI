@@ -1,4 +1,8 @@
 export const state = {
   selectedPackage: null,
-  currentOrderType: null,
+  currentProductType: null,
+  currentDeliveryType: null,
+  packagePrice: 0,
+  discount: 0,
+  additionalCharges: 0,
 };

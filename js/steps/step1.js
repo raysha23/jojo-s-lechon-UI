@@ -20,6 +20,8 @@ import {
   freebiesSection,
   deliveryFields,
   additionalChargeTotal,
+  orderType,
+  productTypeSelect,
 } from "../state/elements.js";
 
 import { formatCurrency, show, hide } from "../helper/helper.js";
@@ -77,18 +79,29 @@ export function onProductTypeChange(e) {
     hide(dishSection);
     hide(freebiesSection);
 
+    // 🔥 RESET STATE (IMPORTANT)
+    state.currentProductType = null;
     state.selectedPackage = null;
+    state.packagePrice = 0;
+    state.discount = 0;
+    state.additionalCharges = 0;
 
+    // reset UI
     NumberOfPackage.forEach((el) => (el.textContent = 0));
     NumberOfFreebies.forEach((el) => (el.textContent = 0));
     freebieList.innerHTML = "";
+
     packageAmountInput.forEach((el) => (el.textContent = formatCurrency(0)));
 
+    // 🔥 ADD THIS (VERY IMPORTANT)
     recalcTotal();
+
     return;
   }
 
+  state.currentProductType = type;
   state.selectedPackage = null;
+
   applyOrderType(type);
 
   if (type === "dishes") {
@@ -100,13 +113,18 @@ export function onProductTypeChange(e) {
     hide(dishSection);
     hide(freebiesSection);
   }
-}
 
+  // 🔥 ALSO RESET SUMMARY WHEN SWITCHING TYPES
+  state.packagePrice = 0;
+  state.discount = 0;
+
+  recalcTotal();
+}
 // ─────────────────────────────────────────────────────────────
 // PACKAGE SELECT CHANGE
 // ─────────────────────────────────────────────────────────────
 export function onPackageSelectChange() {
-  const type = state.currentOrderType;
+  const type = state.currentProductType;
   const idx = parseInt(packageSelect.value, 10);
 
   if (isNaN(idx)) {
@@ -163,7 +181,7 @@ export function onZoneSelectChange() {
   const idx = parseInt(ZoneSelect.value, 10);
 
   // PICKUP or invalid zone → no fee
-  if (state.currentOrderType !== "delivery" || isNaN(idx)) {
+  if (state.currentDeliveryType !== "delivery" || isNaN(idx)) {
     state.additionalCharges = 0;
 
     updateDeliveryUI(0);
@@ -191,7 +209,6 @@ function updateDeliveryUI(amount) {
   setAll(".additionalCharge", formatted);
 }
 
-
 // ─────────────────────────────────────────────────────────────
 // DELIVERY DROPDOWN
 // ─────────────────────────────────────────────────────────────
@@ -214,6 +231,7 @@ export function populateZoneDropdown() {
 // ─────────────────────────────────────────────────────────────
 export function onOrderTypeChange(e) {
   const type = e.target.value;
+  state.currentDeliveryType = type;
 
   if (type === "delivery") {
     show(deliveryFields);
@@ -241,20 +259,22 @@ export function onOrderTypeChange(e) {
 export function initStep1Listeners() {
   populateZoneDropdown();
 
-  const orderTypeSelect = document.getElementById("orderType");
-  state.currentOrderType = orderTypeSelect?.value || null;
+  const orderTypeSelect = orderType;
+  state.currentDeliveryType = orderTypeSelect?.value || null;
 
-  if (state.currentOrderType === "delivery") {
+  if (state.currentDeliveryType === "delivery") {
     show(deliveryFields);
   } else {
     hide(deliveryFields);
   }
 
-  orderTypeSelect?.addEventListener("change", onOrderTypeChange);
+  // 🔥 HIDE PRODUCT UI UNTIL A PRODUCT TYPE IS SELECTED
+  hide(packageSection);
+  hide(dishSection);
+  hide(freebiesSection);
 
-  document
-    .getElementById("productTypeSelect")
-    .addEventListener("change", onProductTypeChange);
+  orderTypeSelect?.addEventListener("change", onOrderTypeChange);
+  productTypeSelect?.addEventListener("change", onProductTypeChange);
 
   packageSelect.addEventListener("change", onPackageSelectChange);
 

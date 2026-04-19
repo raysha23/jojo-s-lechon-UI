@@ -7,7 +7,7 @@ function setAll(selector, value) {
 }
 
 export function recalcTotal() {
-  const type = state.currentOrderType;
+  const type = state.currentProductType;
 
   const packagePrice = Number(state.packagePrice || 0);
   const discount = Number(state.discount || 0);
@@ -23,6 +23,34 @@ export function recalcTotal() {
         dishTotal += Number(dishProducts[index].amount);
       }
     });
+
+    const subtotalValue = dishTotal;
+    const final = subtotalValue + additionalCharges - discount;
+
+    console.group("🍽️ DISHES CALCULATION");
+    console.log("Dish Total:          ", dishTotal);
+    console.log("Additional Charges:  ", additionalCharges);
+    console.log("Discount:            ", discount);
+    console.log("─────────────────────────────");
+    console.log("Subtotal (dishTotal):", subtotalValue);
+    console.log("Final (sub + charges - disc):", final);
+    console.groupEnd();
+
+    setAll(".dishesTotal, #dishesTotal", formatCurrency(dishTotal));
+    setAll(
+      ".Additional-dishTotal, .additionalTotal, #Additional-dishTotal",
+      formatCurrency(0),
+    );
+    setAll(
+      ".discount, .discountTotal, #discountTotal",
+      formatCurrency(discount),
+    );
+    setAll(".subTotal, .subtotal, #subtotal", formatCurrency(subtotalValue));
+    setAll(
+      ".additionalCharge, #additionalCharge",
+      formatCurrency(additionalCharges),
+    );
+    setAll(".totalAmount, #totalAmount", formatCurrency(final));
   } else {
     document.querySelectorAll(".extra-dish select").forEach((sel) => {
       const index = Number(sel.value);
@@ -30,31 +58,56 @@ export function recalcTotal() {
         additionalTotal += Number(dishProducts[index].amount);
       }
     });
+
+    const subtotal = packagePrice + additionalTotal + additionalCharges;
+    const total = subtotal + discount;
+
+    console.group("🐷 PACKAGE CALCULATION");
+    console.log("Package Price:       ", packagePrice);
+    console.log("Additional Dishes:   ", additionalTotal);
+    console.log("Additional Charges:  ", additionalCharges);
+    console.log("Discount:            ", discount);
+    console.log("─────────────────────────────");
+    console.log("Subtotal (pkg + dishes + charges):", subtotal);
+    console.log("Total    (subtotal - discount):   ", total);
+    console.groupEnd();
+
+    setAll(".dishesTotal, #dishesTotal", formatCurrency(0));
+    setAll(
+      ".Additional-dishTotal, .additionalTotal, #Additional-dishTotal",
+      formatCurrency(additionalTotal),
+    );
+    setAll(
+      ".discount, .discountTotal, #discountTotal",
+      formatCurrency(discount),
+    );
+    setAll(
+      ".additionalCharge, #additionalCharge",
+      formatCurrency(additionalCharges),
+    );
+    setAll(".subTotal, .subtotal, #subtotal", formatCurrency(subtotal));
+    setAll(".totalAmount, #totalAmount", formatCurrency(total));
   }
-
-  const subtotalValue =
-    type === "dishes" ? dishTotal : packagePrice + dishTotal + additionalTotal;
-
-  const final = subtotalValue + discount + additionalCharges;
-
-  // ─── DOM UPDATES ──────────────────────────────────────────
-  setAll(".dishesTotal", formatCurrency(dishTotal));
-  setAll(".Additional-dishTotal", formatCurrency(additionalTotal));
-  setAll(".discountTotal", formatCurrency(discount));
-  setAll(".subTotal", formatCurrency(subtotalValue));
-  setAll(".totalAmount", formatCurrency(final));
 
   // ─── COUNTS ───────────────────────────────────────────────
   const requiredDishes = document.querySelectorAll(".required-dish").length;
   const extraDishes = document.querySelectorAll(".extra-dish").length;
 
-  setAll(
-    ".noOfDishes",
+  const noOfDishes =
     type === "dishes"
       ? document.querySelectorAll("#dishList select").length
-      : requiredDishes + extraDishes,
+      : requiredDishes + extraDishes;
+
+  console.log(
+    "📊 COUNTS — requiredDishes:",
+    requiredDishes,
+    "| extraDishes:",
+    extraDishes,
+    "| noOfDishes:",
+    noOfDishes,
   );
 
+  setAll(".noOfDishes", noOfDishes);
   setAll(".noOfFreebies", state.selectedPackage?.freebies?.length || 0);
   setAll(".noOfPackage", state.selectedPackage ? 1 : 0);
 }

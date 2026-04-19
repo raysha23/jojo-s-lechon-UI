@@ -1,92 +1,135 @@
 // File Path: js/logics/reset-logic.js
+
 import { state } from "../state/state.js";
 import {
+  packageSelect,
   packageAmountInput,
   dishTotalInput,
   totalAmountInput,
+  dishList,
   dishesTotalInput,
   additionalDishTotalInput,
   discountTotal,
+  NumberOfPackage,
+  NumberOfFreebies,
+  additionalChargeTotal,
 } from "../state/elements.js";
-import { setFreebies } from "../ui/freebies-ui.js";
 
-export function resetState({ state, elements, options = {} }) {
+import { setFreebies } from "../ui/freebies-ui.js";
+import { formatCurrency } from "../helper/helper.js";
+import { recalcTotal } from "../calculation/total-order-calculation.js";
+
+// ─────────────────────────────────────────────
+// GENERIC RESET FUNCTION
+// ─────────────────────────────────────────────
+export function resetState(options = {}) {
   const {
     resetPackage = true,
     resetFreebies = true,
     resetDishes = true,
     resetTotals = true,
+    resetDeliveryCharges = false,
   } = options;
 
-  const {
-    packageSelect,
-    packageAmountInput,
-    dishTotalInput,
-    totalAmountInput,
-    dishList,
-    setFreebies,
-    dishesTotalInput, // ➕ add
-    additionalDishTotal, // ➕ add
-    discountTotal, // ➕ add
-    NumberOfPackage, // ➕ add
-  } = elements;
-
   // ─────────────────────────────
-  // RESET STATE
+  // RESET STATE (VERY IMPORTANT)
   // ─────────────────────────────
   if (resetPackage) {
     state.selectedPackage = null;
+    state.packagePrice = 0;     // 🔥 required
+    state.discount = 0;         // 🔥 required
+
     if (packageSelect) packageSelect.value = "";
-    if (NumberOfPackage) NumberOfPackage.textContent = 0;
+
+    if (NumberOfPackage) {
+      NumberOfPackage.forEach((el) => (el.textContent = 0));
+    }
   }
 
   // ─────────────────────────────
-  // FREEBIES RESET
+  // RESET DELIVERY FEE (IMPORTANT)
   // ─────────────────────────────
-  if (resetFreebies && setFreebies) {
+  if (resetDeliveryCharges) {
+    state.additionalCharges = 0;
+
+    if (additionalChargeTotal) {
+      additionalChargeTotal.forEach((el) => {
+        el.textContent = formatCurrency(0);
+      });
+    }
+  }
+
+  // ─────────────────────────────
+  // RESET FREEBIES
+  // ─────────────────────────────
+  if (resetFreebies) {
     setFreebies([]);
+
+    if (NumberOfFreebies) {
+      NumberOfFreebies.forEach((el) => (el.textContent = 0));
+    }
   }
 
   // ─────────────────────────────
-  // PACKAGE AMOUNT RESET
+  // RESET PACKAGE AMOUNT
   // ─────────────────────────────
   if (packageAmountInput) {
-    packageAmountInput.textContent = "0.00"; // ✅ was .value = ""
+    packageAmountInput.forEach((el) => {
+      el.textContent = formatCurrency(0);
+    });
   }
 
   // ─────────────────────────────
-  // TOTAL RESET
-  // ─────────────────────────────
-  if (resetTotals) {
-    if (dishTotalInput) dishTotalInput.textContent = "0.00";
-    if (totalAmountInput) totalAmountInput.textContent = "0.00";
-    if (dishesTotalInput) dishesTotalInput.textContent = "0.00"; // ➕
-    if (additionalDishTotal) additionalDishTotal.textContent = "0.00"; // ➕
-    if (discountTotal) discountTotal.textContent = "0.00"; // ➕
-  }
-
-  // ─────────────────────────────
-  // DISHES RESET
+  // RESET DISHES
   // ─────────────────────────────
   if (resetDishes && dishList) {
     dishList.innerHTML = "";
   }
+
+  // ─────────────────────────────
+  // RESET TOTALS (UI)
+  // ─────────────────────────────
+  if (resetTotals) {
+    if (dishTotalInput) {
+      dishTotalInput.forEach((el) => {
+        el.textContent = formatCurrency(0);
+      });
+    }
+
+    if (dishesTotalInput) {
+      dishesTotalInput.forEach((el) => {
+        el.textContent = formatCurrency(0);
+      });
+    }
+
+    if (additionalDishTotalInput) {
+      additionalDishTotalInput.forEach((el) => {
+        el.textContent = formatCurrency(0);
+      });
+    }
+
+    if (discountTotal) {
+      discountTotal.forEach((el) => {
+        el.textContent = formatCurrency(0);
+      });
+    }
+
+    if (totalAmountInput) {
+      totalAmountInput.forEach((el) => {
+        el.textContent = formatCurrency(0);
+      });
+    }
+  }
+
+  // ─────────────────────────────
+  // FINAL RECALCULATION (CRITICAL)
+  // ─────────────────────────────
+  recalcTotal();
 }
 
+// ─────────────────────────────────────────────
+// EASY CALL FUNCTION
+// ─────────────────────────────────────────────
 export function runReset(options = {}) {
-  resetState({
-    state,
-    elements: {
-      packageSelect,
-      packageAmountInput,
-      dishTotalInput,
-      totalAmountInput,
-      dishList,
-      setFreebies,
-      dishesTotalInput,
-      additionalDishTotal: additionalDishTotalInput,
-      discountTotal,
-    },
-    options,
-  });
+  resetState(options);
 }

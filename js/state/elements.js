@@ -7,12 +7,15 @@ export const timeFields = document.getElementById("timeFields");
 export const productTypeSelect = document.getElementById("productTypeSelect");
 export const dishSection = document.getElementById("dishSection");
 export const dishList = document.getElementById("dishList");
-export const dishTotalInput = document.getElementById("dishTotal");
+export const dishTotalInput = document.querySelectorAll(
+  ".dishesTotal, #dishesTotal",
+);
 export const freebieList = document.getElementById("freebieList");
 export const dishOnlyTotalSection = document.getElementById("dishOnlyTotalSection");
 export const ZoneSelect = document.getElementById("zoneSelect");
 export const addDishButton = document.getElementById("addDishButton");
 export const freebiesSection = document.getElementById("freebiesSection");
+export const deliveryDateInput = document.getElementById("deliveryDate");
 // ─── MULTIPLE ELEMENTS (exist in multiple placeholders, class is better) ───
 
 
@@ -20,11 +23,19 @@ export const freebiesSection = document.getElementById("freebiesSection");
 // ─── SUMMARY ELEMENTS (rendered in multiple placeholders) ────
 export const packageAmountInput = document.querySelectorAll(".packageAmount");
 export const additionalChargeTotal = document.querySelectorAll(".additionalCharge");
-export const subtotal = document.querySelectorAll(".subTotal");
-export const discountTotal = document.querySelectorAll(".discount");
-export const totalAmountInput = document.querySelectorAll(".totalAmount");
-export const dishesTotalInput = document.querySelectorAll(".dishesTotal");
-export const additionalDishTotalInput = document.querySelectorAll(".Additional-dishTotal");
+export const subtotal = document.querySelectorAll(".subTotal, .subtotal, #subtotal");
+export const discountTotal = document.querySelectorAll(
+  ".discount, .discountTotal, #discountTotal",
+);
+export const totalAmountInput = document.querySelectorAll(
+  ".totalAmount, #totalAmount",
+);
+export const dishesTotalInput = document.querySelectorAll(
+  ".dishesTotal, #dishesTotal",
+);
+export const additionalDishTotalInput = document.querySelectorAll(
+  ".Additional-dishTotal, .additionalTotal, #Additional-dishTotal",
+);
 export const NumberOfDishes = document.querySelectorAll(".noOfDishes");
 export const NumberOfFreebies = document.querySelectorAll(".noOfFreebies");
 export const NumberOfPackage = document.querySelectorAll(".noOfPackage");

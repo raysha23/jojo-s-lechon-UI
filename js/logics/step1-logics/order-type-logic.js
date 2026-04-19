@@ -61,14 +61,14 @@ export function getOrderTypeConfig(type, hasSelectedPackage = false) {
 
 export function applyOrderType(type) {
   if (!type) return;
-  state.currentOrderType = type;
+  state.currentProductType = type;
 
   const config = getOrderTypeConfig(type, !!state.selectedPackage);
   if (!config) return;
 
   runReset({
     resetPackage: true,
-    resetDishes: false,
+    resetDishes: true,
     resetTotals: true,
     resetFreebies: true,
   });
