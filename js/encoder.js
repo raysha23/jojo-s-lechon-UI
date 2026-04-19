@@ -133,6 +133,8 @@ flatpickr(dateInput, {
   minDate: "today", // prevent past dates
   allowInput: true, // user can type
 });
+
+
 productTypeSelect.addEventListener("change", (e) => {
   const type = e.target.value;
 
