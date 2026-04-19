@@ -4,7 +4,7 @@ const lechonData = [
   {
     productName: "Cochinillo",
     amount: 7000,
-    promoAmount: "-500",
+    promoAmount: "0",
     freebies: [],
   },
   {

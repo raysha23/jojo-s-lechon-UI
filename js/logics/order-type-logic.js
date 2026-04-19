@@ -1,3 +1,13 @@
+import { state } from "../state/state.js";
+import { runReset } from "./reset-logic.js";
+import { hide, show } from "../helper/helper.js";
+import { dishOnlyTotalSection } from "../state/elements.js";
+import { populatePackageDropdown } from "../encoder.js";
+import { resetState } from "./reset-logic.js";
+import { resetDishes } from "../ui/dishes-ui.js";
+import { recalcTotal } from "../calculation/total-order-calculation.js";
+
+
 export function getOrderTypeConfig(type, hasSelectedPackage = false) {
   switch (type) {
     case "lechon":
@@ -47,5 +57,34 @@ export function getOrderTypeConfig(type, hasSelectedPackage = false) {
 
     default:
       return null;
+  }
+}
+
+export function applyOrderType(type) {
+  state.currentOrderType = type;
+
+  const config = getOrderTypeConfig(type, !!state.selectedPackage);
+  if (!config) return;
+
+  runReset({
+    resetPackage: true,
+    resetDishes: false,
+    resetTotals: true,
+    resetFreebies: true,
+  });
+
+  hide(packageSection);
+  hide(dishSection);
+  hide(dishOnlyTotalSection);
+
+  if (config.showPackage) show(packageSection);
+  if (config.showDish) show(dishSection);
+  if (config.showDishOnlyTotal) show(dishOnlyTotalSection);
+
+  populatePackageDropdown(config.dataSource);
+
+  // 🔥 ONLY HERE we control dish mode properly
+  if (type === "dishes") {
+    resetDishes(0);
   }
 }

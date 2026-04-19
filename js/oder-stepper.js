@@ -8,7 +8,7 @@ const steps = {
   3: document.getElementById("step-3"),
 };
 
-const nextBtn = document.getElementById("nextBtn");
+const nextBtns = document.querySelectorAll(".nextBtn");
 const backBtn = document.getElementById("backBtn");
 function updateStepperUI(step) {
   for (let i = 1; i <= 3; i++) {
@@ -56,18 +56,14 @@ function updateButtons() {
 // =============================
 // STEP NAVIGATION
 // =============================
-nextBtn?.addEventListener("click", () => {
-  if (currentStep < 3) {
-    goToStep(currentStep + 1);
-  } else {
-    alert("Order Completed!");
-  }
-});
-
-backBtn?.addEventListener("click", () => {
-  if (currentStep > 1) {
-    goToStep(currentStep - 1);
-  }
+nextBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (currentStep < 3) {
+      goToStep(currentStep + 1);
+    } else {
+      alert("Order Completed!");
+    }
+  });
 });
 
 // =============================
