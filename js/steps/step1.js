@@ -5,8 +5,8 @@ import { lechonPackageProducts } from "../data/lechon-package-data.js";
 import { dishProducts } from "../data/dishes-data.js";
 import { deliveryChargeList } from "../data/deliveryfee-data.js";
 
-import { getProductSource } from "../logics/product-source-logic.js";
-import { applyOrderType } from "../logics/order-type-logic.js";
+import { getProductSource } from "../logics/step1-logics/product-source-logic.js";
+import { applyOrderType } from "../logics/step1-logics/order-type-logic.js";
 
 import {
   packageAmountInput,
@@ -19,6 +19,7 @@ import {
   freebieList,
   freebiesSection,
   deliveryFields,
+  additionalChargeTotal,
 } from "../state/elements.js";
 
 import { formatCurrency, show, hide } from "../helper/helper.js";
@@ -31,7 +32,9 @@ import { recalcTotal } from "../calculation/total-order-calculation.js";
 // HELPER
 // ─────────────────────────────────────────────────────────────
 export function setAll(selector, value) {
-  document.querySelectorAll(selector).forEach((el) => (el.textContent = value));
+  document.querySelectorAll(selector).forEach((el) => {
+    el.textContent = value;
+  });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -69,13 +72,13 @@ export function populatePackageDropdown(type) {
 export function onProductTypeChange(e) {
   const type = e.target.value;
 
-  // No selection — hide everything
   if (!type) {
     hide(packageSection);
     hide(dishSection);
     hide(freebiesSection);
 
     state.selectedPackage = null;
+
     NumberOfPackage.forEach((el) => (el.textContent = 0));
     NumberOfFreebies.forEach((el) => (el.textContent = 0));
     freebieList.innerHTML = "";
@@ -88,17 +91,14 @@ export function onProductTypeChange(e) {
   state.selectedPackage = null;
   applyOrderType(type);
 
-  console.log("currentOrderType after apply:", state.currentOrderType); // ← check this
-
-  // Dishes only — hide package selector, hide dish/freebie until package picked
   if (type === "dishes") {
     hide(packageSection);
     show(dishSection);
     hide(freebiesSection);
   } else {
     show(packageSection);
-    hide(dishSection); // hide until a package is selected
-    hide(freebiesSection); // hide until a package is selected
+    hide(dishSection);
+    hide(freebiesSection);
   }
 }
 
@@ -109,9 +109,20 @@ export function onPackageSelectChange() {
   const type = state.currentOrderType;
   const idx = parseInt(packageSelect.value, 10);
 
-  if (isNaN(idx)) return;
+  if (isNaN(idx)) {
+    hide(dishSection);
+    hide(freebiesSection);
 
-  // ✅ Pass the actual product sources, not state
+    freebieList.innerHTML = "";
+    state.selectedPackage = null;
+
+    setAll(".noOfPackage", 0);
+    setAll(".packageAmount", formatCurrency(0));
+
+    recalcTotal();
+    return;
+  }
+
   const source = getProductSource(type, {
     lechonProducts,
     bellyProducts,
@@ -133,7 +144,6 @@ export function onPackageSelectChange() {
 
   setFreebies(pkg.freebies);
   resetDishes(pkg.NoOfDishes || 0);
-  recalcTotal();
 
   show(freebiesSection);
 
@@ -142,33 +152,49 @@ export function onPackageSelectChange() {
   } else {
     hide(dishSection);
   }
-}
-// ─────────────────────────────────────────────────────────────
-// ZONE SELECT CHANGE
-// ─────────────────────────────────────────────────────────────
-export function onZoneSelectChange() {
-  const idx = parseInt(ZoneSelect.value, 10);
-
-  if (isNaN(idx)) {
-    state.additionalCharges = 0;
-  } else {
-    const zone = deliveryChargeList[idx];
-    const charge = Number(zone.minAmount || 0);
-    state.additionalCharges = charge;
-    setAll(".additionalCharge", formatCurrency(charge));
-  }
 
   recalcTotal();
 }
 
-export function onOrderTypeChange(e) {
-  if (e.target.value === "delivery") {
-    show(deliveryFields);
-  } else {
-    hide(deliveryFields);
+// ─────────────────────────────────────────────────────────────
+// ZONE SELECT CHANGE (FIXED)
+// ─────────────────────────────────────────────────────────────
+export function onZoneSelectChange() {
+  const idx = parseInt(ZoneSelect.value, 10);
+
+  // PICKUP or invalid zone → no fee
+  if (state.currentOrderType !== "delivery" || isNaN(idx)) {
+    state.additionalCharges = 0;
+
+    updateDeliveryUI(0);
+    recalcTotal();
+    return;
   }
+
+  const zone = deliveryChargeList[idx];
+  const charge = Number(zone?.minAmount || 0);
+
+  state.additionalCharges = charge;
+  additionalChargeTotal.forEach(
+    (el) => (el.textContent = formatCurrency(charge)),
+  );
+
+  updateDeliveryUI(charge);
+  recalcTotal();
 }
 
+// ─────────────────────────────────────────────────────────────
+// DELIVERY UI SYNC (IMPORTANT FIX)
+// ─────────────────────────────────────────────────────────────
+function updateDeliveryUI(amount) {
+  const formatted = formatCurrency(amount);
+  setAll(".additionalCharge", formatted);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// DELIVERY DROPDOWN
+// ─────────────────────────────────────────────────────────────
 export function populateZoneDropdown() {
   ZoneSelect.innerHTML = '<option value="">Select Zone</option>';
 
@@ -176,29 +202,62 @@ export function populateZoneDropdown() {
     const opt = document.createElement("option");
     opt.value = i;
 
-    // zones is an array, join them if multiple
     const label = zone.zones.join(", ");
-    const fee = zone.minAmount;
-      
+    opt.textContent = `${label} — ₱${zone.minAmount}`;
 
-    opt.textContent = `${label} — ${fee}`;
     ZoneSelect.appendChild(opt);
   });
 }
+
 // ─────────────────────────────────────────────────────────────
-// REGISTER LISTENERS
+// ORDER TYPE CHANGE (FIXED)
+// ─────────────────────────────────────────────────────────────
+export function onOrderTypeChange(e) {
+  const type = e.target.value;
+
+  if (type === "delivery") {
+    show(deliveryFields);
+
+    const idx = parseInt(ZoneSelect.value, 10);
+
+    if (!isNaN(idx)) {
+      const zone = deliveryChargeList[idx];
+      state.additionalCharges = Number(zone?.minAmount || 0);
+    } else {
+      state.additionalCharges = 0;
+    }
+  } else {
+    hide(deliveryFields);
+    state.additionalCharges = 0;
+  }
+
+  updateDeliveryUI(state.additionalCharges);
+  recalcTotal();
+}
+
+// ─────────────────────────────────────────────────────────────
+// INIT LISTENERS
 // ─────────────────────────────────────────────────────────────
 export function initStep1Listeners() {
-  show(deliveryFields);
   populateZoneDropdown();
-  document
-    .getElementById("orderType")
-    .addEventListener("change", onOrderTypeChange);
+
+  const orderTypeSelect = document.getElementById("orderType");
+  state.currentOrderType = orderTypeSelect?.value || null;
+
+  if (state.currentOrderType === "delivery") {
+    show(deliveryFields);
+  } else {
+    hide(deliveryFields);
+  }
+
+  orderTypeSelect?.addEventListener("change", onOrderTypeChange);
 
   document
     .getElementById("productTypeSelect")
     .addEventListener("change", onProductTypeChange);
 
   packageSelect.addEventListener("change", onPackageSelectChange);
+
+  // ✅ IMPORTANT: must be enabled
   ZoneSelect.addEventListener("change", onZoneSelectChange);
 }

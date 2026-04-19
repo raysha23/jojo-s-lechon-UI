@@ -101,7 +101,7 @@ export function renderOrderSummary() {
             <p class="font-bold text-sm tracking-tight">Additional charges</p>
             <p class="text-[10px] text-gray-500 font-medium">Delivery fee</p>
           </div>
-          <p class="deliveryFee font-bold text-lg">₱0</p>
+          <p class="additionalCharge font-bold text-lg">₱0</p>
         </div>
 
         <div class="flex justify-between items-center border-t border-gray-800 pt-5">
