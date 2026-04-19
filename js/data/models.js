@@ -23,9 +23,8 @@ export class BellyModel {
   }
 }
 
-
 export class BellyPackageModel {
-  constructor(productName, amount, promoAmount,NoOfDishes, dishes, freebies) {
+  constructor(productName, amount, promoAmount, NoOfDishes, dishes, freebies) {
     this.productName = productName;
     this.amount = amount;
     this.promoAmount = promoAmount;
@@ -33,13 +32,13 @@ export class BellyPackageModel {
     this.dishes = dishes;
     this.freebies = freebies;
   }
-    getFinalPrice() {
+  getFinalPrice() {
     return this.amount - (this.promoAmount === "-1000" ? 1000 : 500);
-    }
+  }
 }
 
 export class LechonPackageModel {
-  constructor(productName, amount, promoAmount,NoOfDishes, dishes, freebies) {
+  constructor(productName, amount, promoAmount, NoOfDishes, dishes, freebies) {
     this.productName = productName;
     this.amount = amount;
     this.promoAmount = promoAmount;
@@ -47,15 +46,28 @@ export class LechonPackageModel {
     this.dishes = dishes;
     this.freebies = freebies;
   }
-    getFinalPrice() {
+  getFinalPrice() {
     return this.amount - (this.promoAmount === "-1000" ? 1000 : 500);
-    }
+  }
 }
 
-export class DishModel{
-    constructor(productName, amount) {
-        this.productName = productName;
-        this.amount = amount;
-    }
+export class DishModel {
+  constructor(productName, amount) {
+    this.productName = productName;
+    this.amount = amount;
+  }
 }
 
+export class DeliveryChargeModel {
+  constructor(zones, minAmount, maxAmount = null) {
+    this.zones = zones; // array now
+    this.minAmount = minAmount;
+    this.maxAmount = maxAmount;
+  }
+
+  getDisplayPrice() {
+    return this.maxAmount
+      ? `₱${this.minAmount} - ₱${this.maxAmount}`
+      : `₱${this.minAmount}`;
+  }
+}

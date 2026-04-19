@@ -128,7 +128,7 @@ function applyOrderType(type) {
 
   // 🔥 ONLY HERE we control dish mode properly
   if (type === "dishes") {
-    resetDishes(1);
+    resetDishes(0);
   }
 }
 // ─────────────────────────────────────────────────────────────
