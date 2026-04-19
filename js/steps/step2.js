@@ -2,14 +2,15 @@
 // STEP 2 - Customer Info
 // =============================
 
-
-const contactList = document.getElementById("contactList");
-const addContactBtn = document.getElementById("addContactBtn");
-const contactError = document.getElementById("contactError");
-const customerName = document.getElementById("customerName");
-const nameError = document.getElementById("nameError");
-const facebookProfile = document.getElementById("facebookProfile");
-const fbError = document.getElementById("fbError");
+import {
+  contactList,
+  addContactBtn,
+  contactError,
+  customerName,
+  nameError,
+  facebookProfile,
+  fbError,
+} from "../state/elements";
 
 const MAX_CONTACTS = 2;
 

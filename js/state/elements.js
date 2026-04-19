@@ -39,3 +39,14 @@ export const additionalDishTotalInput = document.querySelectorAll(
 export const NumberOfDishes = document.querySelectorAll(".noOfDishes");
 export const NumberOfFreebies = document.querySelectorAll(".noOfFreebies");
 export const NumberOfPackage = document.querySelectorAll(".noOfPackage");
+
+
+
+// step 2 elements
+export const contactList = document.getElementById("contactList");
+export const addContactBtn = document.getElementById("addContactBtn");
+export const contactError = document.getElementById("contactError");
+export const customerName = document.getElementById("customerName");
+export const nameError = document.getElementById("nameError");
+export const facebookProfile = document.getElementById("facebookProfile");
+export const fbError = document.getElementById("fbError");

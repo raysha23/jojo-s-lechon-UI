@@ -79,21 +79,37 @@ export function onProductTypeChange(e) {
     hide(dishSection);
     hide(freebiesSection);
 
-    // 🔥 RESET STATE (IMPORTANT)
+    // ✅ RESET STATE
     state.currentProductType = null;
     state.selectedPackage = null;
     state.packagePrice = 0;
     state.discount = 0;
     state.additionalCharges = 0;
 
-    // reset UI
-    NumberOfPackage.forEach((el) => (el.textContent = 0));
-    NumberOfFreebies.forEach((el) => (el.textContent = 0));
+    // ✅ RESET SELECTS
+    packageSelect.value = "";
+    ZoneSelect.value = "";
+
+    // ✅ RESET DISHES (CRITICAL)
+    resetDishes(0);
+
+    // ✅ RESET FREEBIES
     freebieList.innerHTML = "";
 
-    packageAmountInput.forEach((el) => (el.textContent = formatCurrency(0)));
+    // ✅ RESET COUNTS
+    NumberOfPackage.forEach((el) => (el.textContent = 0));
+    NumberOfFreebies.forEach((el) => (el.textContent = 0));
 
-    // 🔥 ADD THIS (VERY IMPORTANT)
+    // ✅ RESET UI VALUES
+    setAll(".packageAmount", formatCurrency(0));
+    setAll(".dishesTotal", formatCurrency(0));
+    setAll(".additionalTotal", formatCurrency(0));
+    setAll(".discount", formatCurrency(0));
+    setAll(".subtotal", formatCurrency(0));
+    setAll(".totalAmount", formatCurrency(0));
+    setAll(".noOfDishes", 0);
+
+    // ✅ FINAL RECALC
     recalcTotal();
 
     return;
@@ -114,7 +130,7 @@ export function onProductTypeChange(e) {
     hide(freebiesSection);
   }
 
-  // 🔥 ALSO RESET SUMMARY WHEN SWITCHING TYPES
+  // ✅ RESET VALUES WHEN SWITCHING
   state.packagePrice = 0;
   state.discount = 0;
 
@@ -127,20 +143,37 @@ export function onPackageSelectChange() {
   const type = state.currentProductType;
   const idx = parseInt(packageSelect.value, 10);
 
+  // 🔥 EMPTY SELECT → RESET PACKAGE ONLY
   if (isNaN(idx)) {
     hide(dishSection);
     hide(freebiesSection);
 
-    freebieList.innerHTML = "";
+    // ✅ RESET STATE (PACKAGE ONLY)
     state.selectedPackage = null;
+    state.packagePrice = 0;
+    state.discount = 0;
+
+    // ✅ RESET UI
+    freebieList.innerHTML = "";
+    resetDishes(0);
 
     setAll(".noOfPackage", 0);
     setAll(".packageAmount", formatCurrency(0));
+    setAll(".dishesTotal", formatCurrency(0));
+    setAll(".additionalTotal", formatCurrency(0));
+    setAll(".discount", formatCurrency(0));
+    setAll(".subtotal", formatCurrency(0));
+    setAll(".totalAmount", formatCurrency(0));
+    setAll(".noOfDishes", 0);
+    setAll(".noOfFreebies", 0);
+
+    // ❗ DO NOT reset delivery here
 
     recalcTotal();
     return;
   }
 
+  // 🔥 VALID PACKAGE SELECTED
   const source = getProductSource(type, {
     lechonProducts,
     bellyProducts,
@@ -153,13 +186,16 @@ export function onPackageSelectChange() {
   const pkg = source.at(idx);
   if (!pkg) return;
 
+  // ✅ SET STATE
   state.selectedPackage = pkg;
   state.packagePrice = pkg.amount;
   state.discount = Number(pkg.promoAmount || 0);
 
+  // ✅ UPDATE UI
   setAll(".noOfPackage", 1);
   setAll(".packageAmount", formatCurrency(pkg.amount));
 
+  // ✅ LOAD DATA
   setFreebies(pkg.freebies);
   resetDishes(pkg.NoOfDishes || 0);
 
