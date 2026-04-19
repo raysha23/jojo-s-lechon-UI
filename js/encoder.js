@@ -126,25 +126,13 @@ packageSelect.addEventListener("change", () => {
 // ─────────────────────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────────────────────
-
-//Date
 const dateInput = document.getElementById("deliveryDate");
 
-const today = new Date().toISOString().split("T")[0];
-dateInput.min = today;
-
-dateInput.addEventListener("change", () => {
-  const date = new Date(dateInput.value);
-
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  const yyyy = date.getFullYear();
-
-  const formatted = `${mm}/${dd}/${yyyy}`;
-
-  console.log("MM/DD/YYYY:", formatted);
+flatpickr(dateInput, {
+  dateFormat: "m/d/Y", // MM/DD/YYYY
+  minDate: "today", // prevent past dates
+  allowInput: true, // user can type
 });
-
 productTypeSelect.addEventListener("change", (e) => {
   const type = e.target.value;
 
@@ -156,6 +144,8 @@ productTypeSelect.addEventListener("change", (e) => {
     show(packageSection);
   }
 });
+
+
 
 orderType.addEventListener("change", (e) => {
   const type = e.target.value;
