@@ -1,6 +1,13 @@
 // File Path: js/logics/reset-logic.js
 import { state } from "../state/state.js";
-import { packageAmountInput ,dishTotalInput,totalAmountInput,dishesTotalInput,additionalDishTotalInput } from "../state/elements.js";
+import {
+  packageAmountInput,
+  dishTotalInput,
+  totalAmountInput,
+  dishesTotalInput,
+  additionalDishTotalInput,
+  discountTotal,
+} from "../state/elements.js";
 import { setFreebies } from "../ui/freebies-ui.js";
 
 export function resetState({ state, elements, options = {} }) {
@@ -65,7 +72,6 @@ export function resetState({ state, elements, options = {} }) {
     dishList.innerHTML = "";
   }
 }
-
 
 export function runReset(options = {}) {
   resetState({

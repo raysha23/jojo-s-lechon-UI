@@ -1,4 +1,4 @@
-import { NumberOfFreebies } from "../state/elements.js";
+import { NumberOfFreebies, freebieList } from "../state/elements.js";
 
 export function setFreebies(freebies = []) {
   freebieList.innerHTML = "";

@@ -1,5 +1,6 @@
 import { recalcTotal } from "../calculation/total-order-calculation.js";
 import { dishProducts } from "../data/dishes-data.js";
+import { addDishButton } from "../state/elements.js";
 
 export function resetDishes(count = 1) {
   console.log("🔄 [DEBUG] resetDishes called with count:", count);
@@ -75,4 +76,12 @@ export function addExtraDish() {
   });
 
   recalcTotal();
+}
+
+
+if (addDishButton) {
+  addDishButton.addEventListener("click", () => {
+    console.log("➕ Add Dish clicked");
+    addExtraDish();
+  });
 }

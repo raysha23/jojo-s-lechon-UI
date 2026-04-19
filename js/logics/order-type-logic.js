@@ -2,7 +2,7 @@ import { state } from "../state/state.js";
 import { runReset } from "./reset-logic.js";
 import { hide, show } from "../helper/helper.js";
 import { dishOnlyTotalSection } from "../state/elements.js";
-import { populatePackageDropdown } from "../encoder.js";
+import { populatePackageDropdown } from "../steps/step1.js";
 import { resetState } from "./reset-logic.js";
 import { resetDishes } from "../ui/dishes-ui.js";
 import { recalcTotal } from "../calculation/total-order-calculation.js";
