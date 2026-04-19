@@ -5,6 +5,9 @@ import {
   discountTotal,
   subtotal,
   totalAmountInput,
+  NumberOfDishes,
+  NumberOfFreebies,
+  NumberOfPackage,
 } from "../state/elements.js";
 
 import { formatCurrency } from "../helper/helper.js";
@@ -51,4 +54,24 @@ export function recalcTotal() {
   if (discountTotal) discountTotal.textContent = formatCurrency(discount);
   if (subtotal) subtotal.textContent = formatCurrency(subtotalValue); // 🔥 was missing
   if (totalAmountInput) totalAmountInput.textContent = formatCurrency(final);
+  
+  // dishes count
+  const requiredDishes = document.querySelectorAll(".required-dish").length;
+  const extraDishes = document.querySelectorAll(".extra-dish").length;
+  if (NumberOfDishes) {
+    NumberOfDishes.textContent =
+      type === "dishes"
+        ? document.querySelectorAll("#dishList select").length
+        : requiredDishes + extraDishes;
+  }
+
+  // freebies count
+  if (NumberOfFreebies) {
+    NumberOfFreebies.textContent = state.selectedPackage?.freebies?.length || 0;
+  }
+
+  // package count
+  if (NumberOfPackage) {
+    NumberOfPackage.textContent = state.selectedPackage ? 1 : 0;
+  }
 }

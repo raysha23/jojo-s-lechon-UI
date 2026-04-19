@@ -16,6 +16,9 @@ import {
   totalAmountInput,
   subtotal,
   additionalChargeTotal,
+  NumberOfDishes,
+  NumberOfFreebies,
+  NumberOfPackage,
 } from "./state/elements.js";
 import { formatCurrency, show, hide } from "./helper/helper.js";
 import { state } from "./state/state.js";
@@ -24,181 +27,6 @@ import { resetDishes } from "./ui/dishes-ui.js";
 import { recalcTotal } from "./calculation/total-order-calculation.js";
 import { addExtraDish } from "./ui/dishes-ui.js";
 
-// ─────────────────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────────────────
-// const state = {
-//   selectedPackage: null,
-//   currentOrderType: null,
-// };
-
-// ─────────────────────────────────────────────────────────────
-// AUTH
-// ─────────────────────────────────────────────────────────────
-// const user = JSON.parse(localStorage.getItem("loggedUser") || "null");
-
-// if (!user || user.role !== "Encoder") {
-//   window.location.href = "index.html";
-// }
-
-// document.getElementById("userName").textContent = user?.username || "";
-
-// ─────────────────────────────────────────────────────────────
-// LOGOUT
-// ─────────────────────────────────────────────────────────────
-// document.getElementById("logoutBtn").addEventListener("click", () => {
-//   localStorage.removeItem("loggedUser");
-//   window.location.href = "index.html";
-// });
-
-// ─────────────────────────────────────────────────────────────
-// ELEMENTS
-// ─────────────────────────────────────────────────────────────
-// const packageSection = document.getElementById("packageSection");
-// const packageSelect = document.getElementById("packageSelect");
-// const packageAmountInput = document.querySelectorAll(".packageAmount");
-
-// //New
-// const orderType = document.getElementById("orderType");
-// const deliveryFields = document.getElementById("deliveryFields");
-// const timeFields = document.getElementById("timeFields");
-// const productTypeSelect = document.getElementById("productTypeSelect");
-
-// const dishSection = document.getElementById("dishSection");
-// const dishList = document.getElementById("dishList");
-// const dishTotalInput = document.getElementById("dishTotal");
-
-// const additionalChargeTotal = document.getElementById("additionalCharge");
-// const subtotal = document.getElementById("subTotal");
-// const discountTotal = document.getElementById("discountTotal");
-// const totalAmountInput = document.getElementById("totalAmount");
-
-// const freebieList = document.getElementById("freebieList");
-
-// const dishesTotalInput = document.getElementById("dishesTotal");
-// const additionalDishTotalInput = document.getElementById(
-//   "Additional-dishTotal",
-// );
-
-// const dishOnlyTotalSection = document.getElementById("dishOnlyTotalSection");
-
-// ─────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────
-// function show(el) {
-//   if (el) el.style.display = "block";
-// }
-
-// function hide(el) {
-//   if (el) el.style.display = "none";
-// }
-
-// function formatCurrency(value = 0) {
-//   return (
-//     "₱" +
-//     Number(value).toLocaleString("en-US", {
-//       minimumFractionDigits: 2,
-//       maximumFractionDigits: 2,
-//     })
-//   );
-// }
-
-// ─────────────────────────────────────────────────────────────
-// RESET SYSTEM CONNECTOR
-// ─────────────────────────────────────────────────────────────
-// function runReset(options = {}) {
-//   resetState({
-//     state,
-//     elements: {
-//       packageSelect,
-//       packageAmountInput,
-//       dishTotalInput,
-//       totalAmountInput,
-//       dishList,
-//       setFreebies,
-//       dishesTotalInput,
-//       additionalDishTotal: additionalDishTotalInput,
-//       discountTotal,
-//     },
-//     options,
-//   });
-// }
-// ─────────────────────────────────────────────────────────────
-// APPLY ORDER TYPE
-// ─────────────────────────────────────────────────────────────
-// function applyOrderType(type) {
-//   state.currentOrderType = type;
-
-//   const config = getOrderTypeConfig(type, !!state.selectedPackage);
-//   if (!config) return;
-
-//   runReset({
-//     resetPackage: true,
-//     resetDishes: false,
-//     resetTotals: true,
-//     resetFreebies: true,
-//   });
-
-//   hide(packageSection);
-//   hide(dishSection);
-//   hide(dishOnlyTotalSection);
-
-//   if (config.showPackage) show(packageSection);
-//   if (config.showDish) show(dishSection);
-//   if (config.showDishOnlyTotal) show(dishOnlyTotalSection);
-
-//   populatePackageDropdown(config.dataSource);
-
-//   // 🔥 ONLY HERE we control dish mode properly
-//   if (type === "dishes") {
-//     resetDishes(0);
-//   }
-// }
-// ─────────────────────────────────────────────────────────────
-// TOTAL
-// ─────────────────────────────────────────────────────────────
-// function recalcTotal() {
-//   const type = state.currentOrderType;
-
-//   const packagePrice = Number(state.packagePrice || 0);
-//   const discount = Number(state.discount || 0); // store as negative e.g. -500
-//   const additionalCharges = Number(state.additionalCharges || 0); // e.g. 200
-
-//   let dishTotal = 0;
-//   let additionalTotal = 0;
-
-//   if (type === "dishes") {
-//     document.querySelectorAll("#dishList select").forEach((sel) => {
-//       const index = Number(sel.value);
-//       if (!Number.isNaN(index) && dishProducts[index]) {
-//         dishTotal += Number(dishProducts[index].amount);
-//       }
-//     });
-//   } else {
-//     document.querySelectorAll(".extra-dish select").forEach((sel) => {
-//       const index = Number(sel.value);
-//       if (!Number.isNaN(index) && dishProducts[index]) {
-//         additionalTotal += Number(dishProducts[index].amount);
-//       }
-//     });
-//   }
-
-//   // ── Subtotal = items only, before discount/charges ──
-//   const subtotalValue =
-//     type === "dishes" ? dishTotal : packagePrice + dishTotal + additionalTotal;
-
-//   // ── Final = subtotal + discount (negative) + charges ──
-//   const final = subtotalValue + discount + additionalCharges;
-
-//   // ── DOM updates ──
-//   if (dishesTotalInput)
-//     dishesTotalInput.textContent = formatCurrency(dishTotal);
-//   if (additionalDishTotalInput)
-//     additionalDishTotalInput.textContent = formatCurrency(additionalTotal);
-//   if (discountTotal) discountTotal.textContent = formatCurrency(discount);
-//   if (subtotal) subtotal.textContent = formatCurrency(subtotalValue); // 🔥 was missing
-//   if (totalAmountInput) totalAmountInput.textContent = formatCurrency(final);
-// }
 // ─────────────────────────────────────────────────────────────
 // PACKAGE DROPDOWN
 // ─────────────────────────────────────────────────────────────
@@ -377,7 +205,7 @@ packageSelect.addEventListener("change", () => {
   const idx = parseInt(packageSelect.value, 10);
 
   if (isNaN(idx)) return;
-
+  
   const source = getProductSource(type, {
     lechonProducts,
     bellyProducts,
@@ -385,10 +213,11 @@ packageSelect.addEventListener("change", () => {
     bellyPackageProducts,
     dishProducts,
   });
-
+  
   const pkg = source.at(idx);
   if (!pkg) return;
-
+  
+  NumberOfPackage.textContent = state.selectedPackage ? 1 : 0;
   state.selectedPackage = pkg;
 
   state.packagePrice = pkg.amount;
