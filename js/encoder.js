@@ -3,6 +3,7 @@ import { bellyProducts } from "./data/belly-data.js";
 import { bellyPackageProducts } from "./data/belly-package-data.js";
 import { lechonPackageProducts } from "./data/lechon-package-data.js";
 import { dishProducts } from "./data/dishes-data.js";
+import { deliveryChargeList } from "./data/deliveryfee-data.js";
 
 import { getOrderTypeConfig } from "./logics/order-type-logic.js";
 import { getProductSource } from "./logics/product-source-logic.js";
@@ -19,6 +20,7 @@ import {
   NumberOfDishes,
   NumberOfFreebies,
   NumberOfPackage,
+  ZoneSelect,
 } from "./state/elements.js";
 import { formatCurrency, show, hide } from "./helper/helper.js";
 import { state } from "./state/state.js";
@@ -60,134 +62,6 @@ export function populatePackageDropdown(type) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// FREEBIES
-// ─────────────────────────────────────────────────────────────
-// function setFreebies(freebies = []) {
-//   freebieList.innerHTML = "";
-
-//   // No freebies case
-//   if (!freebies.length) {
-//     freebieList.innerHTML = `
-//       <div class="col-span-full text-center text-gray-400 italic text-sm">
-//         No freebies available
-//       </div>
-//     `;
-//     return;
-//   }
-
-//   // Generate each freebie card
-//   freebies.forEach((f) => {
-//     const div = document.createElement("div");
-
-//     div.className =
-//       "flex items-center space-x-3 bg-emerald-50/50 border border-emerald-100 p-3 rounded-xl";
-
-//     div.innerHTML = `
-//       <div class="bg-emerald-500 rounded-full p-0.5">
-//         <svg
-//           class="w-3 h-3 text-white"
-//           fill="none"
-//           stroke="currentColor"
-//           viewBox="0 0 24 24"
-//         >
-//           <path
-//             stroke-linecap="round"
-//             stroke-linejoin="round"
-//             stroke-width="3"
-//             d="M5 13l4 4L19 7"
-//           />
-//         </svg>
-//       </div>
-
-//       <span class="text-sm font-medium text-emerald-800">
-//         ${f}
-//       </span>
-//     `;
-
-//     freebieList.appendChild(div);
-//   });
-// }
-
-// ─────────────────────────────────────────────────────────────
-// DISHES
-// ─────────────────────────────────────────────────────────────
-// function resetDishes(count = 1) {
-//   console.log("🔄 [DEBUG] resetDishes called with count:", count);
-
-//   dishList.innerHTML = "";
-
-//   for (let i = 0; i < count; i++) {
-//     const div = document.createElement("div");
-//     div.className = "flex gap-2 required-dish";
-
-//     div.innerHTML = `
-//       <select class="flex-1 p-3 bg-gray-100 border rounded-xl">
-//         <option value="">— Select Dish —</option>
-//       </select>
-//     `;
-
-//     dishList.appendChild(div);
-
-//     const select = div.querySelector("select");
-
-//     dishProducts.forEach((dish, index) => {
-//       const opt = document.createElement("option");
-//       opt.value = index;
-
-//       // ✅ FIX: remove price display
-//       opt.textContent = dish.productName;
-
-//       select.appendChild(opt);
-//     });
-
-//     select.addEventListener("change", () => {
-//       console.log("🍛 [DEBUG] Required dish changed:", select.value);
-//       recalcTotal();
-//     });
-//   }
-
-//   recalcTotal();
-// }
-// // 🔥 Add function to add extra dishes
-// function addExtraDish() {
-//   console.log("➕ [DEBUG] Creating new extra dish row");
-
-//   const div = document.createElement("div");
-//   div.className = "flex gap-2 extra-dish";
-
-//   div.innerHTML = `
-//     <select class="flex-1 p-3 bg-white border border-gray-200 rounded-xl outline-none">
-//       <option value="">— Select Dish —</option>
-//     </select>
-//     <button type="button" class="text-red-400 hover:text-red-600 px-2 remove-dish">✕</button>
-//   `;
-
-//   dishList.appendChild(div);
-
-//   const select = div.querySelector("select");
-
-//   dishProducts.forEach((dish, i) => {
-//     const opt = document.createElement("option");
-//     opt.value = i;
-//     opt.textContent = `${dish.productName} — ₱${dish.amount}`;
-//     select.appendChild(opt);
-//   });
-
-//   select.addEventListener("change", () => {
-//     console.log("🍽️ [DEBUG] Dish selected:", select.value);
-//     recalcTotal();
-//   });
-
-//   div.querySelector(".remove-dish").addEventListener("click", () => {
-//     console.log("❌ [DEBUG] Extra dish removed");
-//     div.remove();
-//     recalcTotal();
-//   });
-
-//   recalcTotal();
-// }
-
-// ─────────────────────────────────────────────────────────────
 // EVENTS
 // ─────────────────────────────────────────────────────────────
 document.getElementById("productTypeSelect").addEventListener("change", (e) => {
@@ -205,18 +79,19 @@ packageSelect.addEventListener("change", () => {
   const idx = parseInt(packageSelect.value, 10);
 
   if (isNaN(idx)) return;
-  
+
   const source = getProductSource(type, {
     lechonProducts,
     bellyProducts,
     lechonPackageProducts,
     bellyPackageProducts,
     dishProducts,
+    deliveryChargeList,
   });
-  
+
   const pkg = source.at(idx);
   if (!pkg) return;
-  
+
   NumberOfPackage.textContent = state.selectedPackage ? 1 : 0;
   state.selectedPackage = pkg;
 
@@ -296,6 +171,16 @@ orderType.addEventListener("change", (e) => {
   }
 });
 
+// 🔥 FORCE INITIAL ORDER TYPE UI
+const initialOrderType = orderType.value;
+
+if (initialOrderType === "delivery") {
+  show(timeFields);
+  show(deliveryFields);
+} else {
+  show(timeFields);
+  hide(deliveryFields);
+}
 const defaultType = productTypeSelect.value; // reads whatever is selected in HTML (e.g. "dishes")
 
 applyOrderType(defaultType);
@@ -309,3 +194,38 @@ if (totalAmountInput) totalAmountInput.textContent = formatCurrency(0);
 if (subtotal) subtotal.textContent = formatCurrency(0);
 if (additionalChargeTotal)
   additionalChargeTotal.textContent = formatCurrency(0);
+
+function populateZones() {
+  zoneSelect.innerHTML = '<option value="">— Select Zone —</option>';
+
+  deliveryChargeList.forEach((zoneObj, index) => {
+    zoneObj.zones.forEach((zoneName) => {
+      const opt = document.createElement("option");
+      opt.value = index;
+      opt.textContent = zoneName;
+      zoneSelect.appendChild(opt);
+    });
+  });
+}
+populateZones();
+
+zoneSelect.addEventListener("change", () => {
+  const idx = parseInt(zoneSelect.value, 10);
+
+  if (isNaN(idx)) {
+    state.additionalCharges = 0;
+  } else {
+    const zone = deliveryChargeList[idx];
+
+    // ✅ use correct property
+    const charge = Number(zone.minAmount || 0);
+
+    // ✅ use correct state variable
+    state.additionalCharges = charge;
+
+    // ✅ update UI immediately
+    additionalChargeTotal.textContent = formatCurrency(charge);
+  }
+
+  recalcTotal();
+});

@@ -29,3 +29,5 @@ export const dishOnlyTotalSection = document.getElementById("dishOnlyTotalSectio
 export const NumberOfDishes = document.getElementById("noOfDishes");
 export const NumberOfFreebies = document.getElementById("noOfFreebies");
 export const NumberOfPackage = document.getElementById("noOfPackage");
+
+export const ZoneSelect = document.getElementById("zoneSelect");
