@@ -1,5 +1,3 @@
-// FILE: js/order-stepper.js
-
 let currentStep = 1;
 
 const steps = {
@@ -9,11 +7,16 @@ const steps = {
 };
 
 const nextBtns = document.querySelectorAll(".nextBtn");
-const backBtn = document.getElementById("backBtn");
+const backBtn = document.querySelector(".backBtn"); // ✅ FIXED (single element)
+
+const nextText = document.getElementById("nextText");
+
+// =============================
+// STEP UI UPDATE
+// =============================
 function updateStepperUI(step) {
   for (let i = 1; i <= 3; i++) {
     const el = document.getElementById(`step-circle-${i}`);
-
     if (!el) continue;
 
     if (i <= step) {
@@ -25,10 +28,13 @@ function updateStepperUI(step) {
     }
   }
 }
+
 // =============================
-// SHOW STEP FUNCTION
+// SHOW STEP
 // =============================
 function goToStep(step) {
+  if (step < 1 || step > 3) return;
+
   Object.values(steps).forEach((el) => el.classList.add("hidden"));
   steps[step].classList.remove("hidden");
 
@@ -39,10 +45,8 @@ function goToStep(step) {
 }
 
 // =============================
-// BUTTON STATE
+// BUTTON UI STATE
 // =============================
-const nextText = document.getElementById("nextText");
-
 function updateButtons() {
   if (backBtn) {
     backBtn.classList.toggle("hidden", currentStep === 1);
@@ -54,7 +58,7 @@ function updateButtons() {
 }
 
 // =============================
-// STEP NAVIGATION
+// NEXT BUTTONS
 // =============================
 nextBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -67,6 +71,17 @@ nextBtns.forEach((btn) => {
 });
 
 // =============================
-// STEP INITIALIZATION
+// BACK BUTTON
+// =============================
+if (backBtn) {
+  backBtn.addEventListener("click", () => {
+    if (currentStep > 1) {
+      goToStep(currentStep - 1);
+    }
+  });
+}
+
+// =============================
+// INIT
 // =============================
 goToStep(1);

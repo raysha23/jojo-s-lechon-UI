@@ -65,8 +65,34 @@ export function populatePackageDropdown(type) {
 // EVENTS
 // ─────────────────────────────────────────────────────────────
 document.getElementById("productTypeSelect").addEventListener("change", (e) => {
+  const type = e.target.value;
+
+  if (!type) {
+    hide(packageSection);
+    hide(dishSection);
+
+    state.selectedPackage = null;
+
+    NumberOfPackage.textContent = 0;
+    NumberOfFreebies.textContent = 0;
+
+    freebieList.innerHTML = "";
+
+    packageAmountInput.forEach((el) => (el.textContent = formatCurrency(0)));
+
+    recalcTotal();
+
+    return;
+  }
+
   state.selectedPackage = null;
-  applyOrderType(e.target.value);
+  applyOrderType(type);
+
+  if (type === "dishes") {
+    hide(packageSection);
+  } else {
+    show(packageSection);
+  }
 });
 
 // 🔥 Add event listener for addDish button
@@ -92,8 +118,8 @@ packageSelect.addEventListener("change", () => {
   const pkg = source.at(idx);
   if (!pkg) return;
 
-  NumberOfPackage.textContent = state.selectedPackage ? 1 : 0;
   state.selectedPackage = pkg;
+  NumberOfPackage.textContent = state.selectedPackage ? 1 : 0;
 
   state.packagePrice = pkg.amount;
   state.discount = Number(pkg.promoAmount || 0);
@@ -130,10 +156,10 @@ const dateInput = document.getElementById("deliveryDate");
 
 flatpickr(dateInput, {
   dateFormat: "m/d/Y", // MM/DD/YYYY
-  minDate: "today", // prevent past dates
-  allowInput: true, // user can type
+  minDate: "today", // no past dates
+  allowInput: true,
+  disableMobile: true, // 🔥 ensures Flatpickr shows even on mobile
 });
-
 
 productTypeSelect.addEventListener("change", (e) => {
   const type = e.target.value;
@@ -146,8 +172,6 @@ productTypeSelect.addEventListener("change", (e) => {
     show(packageSection);
   }
 });
-
-
 
 orderType.addEventListener("change", (e) => {
   const type = e.target.value;
@@ -173,9 +197,14 @@ if (initialOrderType === "delivery") {
   show(timeFields);
   hide(deliveryFields);
 }
-const defaultType = productTypeSelect.value; // reads whatever is selected in HTML (e.g. "dishes")
+const defaultType = productTypeSelect.value;
 
-applyOrderType(defaultType);
+if (defaultType) {
+  applyOrderType(defaultType);
+} else {
+  hide(packageSection);
+  hide(dishSection);
+}
 
 // 🔥 ADD THIS — force-render all currency fields on startup
 if (discountTotal) discountTotal.textContent = formatCurrency(0);
@@ -186,6 +215,11 @@ if (totalAmountInput) totalAmountInput.textContent = formatCurrency(0);
 if (subtotal) subtotal.textContent = formatCurrency(0);
 if (additionalChargeTotal)
   additionalChargeTotal.textContent = formatCurrency(0);
+
+// 🔥 Initialize count fields on startup
+if (NumberOfFreebies) NumberOfFreebies.textContent = 0;
+if (NumberOfPackage) NumberOfPackage.textContent = 0;
+if (NumberOfDishes) NumberOfDishes.textContent = 0;
 
 function populateZones() {
   zoneSelect.innerHTML = '<option value="">— Select Zone —</option>';

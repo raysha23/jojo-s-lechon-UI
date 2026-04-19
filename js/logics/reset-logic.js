@@ -21,6 +21,7 @@ export function resetState({ state, elements, options = {} }) {
     dishesTotalInput, // ➕ add
     additionalDishTotal, // ➕ add
     discountTotal, // ➕ add
+    NumberOfPackage, // ➕ add
   } = elements;
 
   // ─────────────────────────────
@@ -29,6 +30,7 @@ export function resetState({ state, elements, options = {} }) {
   if (resetPackage) {
     state.selectedPackage = null;
     if (packageSelect) packageSelect.value = "";
+    if (NumberOfPackage) NumberOfPackage.textContent = 0;
   }
 
   // ─────────────────────────────

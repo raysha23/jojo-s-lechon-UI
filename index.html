@@ -246,7 +246,7 @@
 
                   <!-- real input -->
                   <input
-                    type="date"
+                    type="text"
                     id="deliveryDate"
                     placeholder="MM/DD/YYYY"
                     class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
@@ -710,9 +710,9 @@
           </div>
         </div>
         <div class="mt-8 flex justify-between items-center">
+          <!-- BACK BUTTON -->
           <button
-            id="backBtn"
-            class="bg-white text-gray-700 pr-8 p-3 rounded-full font-bold flex items-center space-x-6 shadow-md border border-gray-100 hover:bg-gray-50 transition-all group"
+            class="backBtn bg-white text-gray-700 pr-8 p-3 rounded-full font-bold flex items-center space-x-6 shadow-md border border-gray-100 hover:bg-gray-50 transition-all group"
           >
             <div
               class="bg-gray-100 p-2 rounded-full group-hover:-translate-x-1 transition-transform"
@@ -731,13 +731,16 @@
                 />
               </svg>
             </div>
+
             <span class="text-lg">Previous</span>
           </button>
 
+          <!-- NEXT BUTTON -->
           <button
             class="nextBtn bg-red-600 text-white pl-8 pr-3 py-3 rounded-full font-bold flex items-center space-x-6 shadow-lg hover:bg-red-700 transition-all group"
           >
             <span id="nextText" class="text-lg">Next</span>
+
             <div
               class="bg-red-500 p-2 rounded-full group-hover:translate-x-1 transition-transform"
             >
@@ -903,7 +906,7 @@
             </div>
           </div>
 
-          <div
+          <!-- <div
             class="bg-emerald-50/50 rounded-2xl border border-emerald-100 p-6"
           >
             <h2 class="text-emerald-800 font-bold mb-4">Included Freebies</h2>
@@ -1005,7 +1008,7 @@
                 Ice Bucket
               </div>
             </div>
-          </div>
+          </div> -->
 
           <button
             class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-red-200 flex items-center justify-center space-x-3 transition-all active:scale-[0.98]"

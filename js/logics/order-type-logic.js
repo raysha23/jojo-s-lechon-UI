@@ -7,7 +7,6 @@ import { resetState } from "./reset-logic.js";
 import { resetDishes } from "../ui/dishes-ui.js";
 import { recalcTotal } from "../calculation/total-order-calculation.js";
 
-
 export function getOrderTypeConfig(type, hasSelectedPackage = false) {
   switch (type) {
     case "lechon":
@@ -61,6 +60,7 @@ export function getOrderTypeConfig(type, hasSelectedPackage = false) {
 }
 
 export function applyOrderType(type) {
+  if (!type) return;
   state.currentOrderType = type;
 
   const config = getOrderTypeConfig(type, !!state.selectedPackage);

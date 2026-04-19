@@ -4,7 +4,7 @@ export function setFreebies(freebies = []) {
   freebieList.innerHTML = "";
 
   NumberOfFreebies.textContent = freebies.length;
-
+  
   // No freebies case
   if (!freebies.length) {
     freebieList.innerHTML = `
